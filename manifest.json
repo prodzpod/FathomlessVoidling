@@ -1,8 +1,8 @@
 ﻿{
 	"name": "AbyssalVoidling",
-	"version_number": "1.0.0",
+	"version_number": "0.5.0",
 	"website_url": "",
-	"description": "Something sinister emerges from the abyss",
+	"description": "Something sinister emerges from the abyss *WIP*",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.2102",
 		"RiskofThunder-HookGenPatcher-1.2.3"
