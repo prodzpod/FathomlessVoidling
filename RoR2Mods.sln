@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metadata", "Metadata", "{3A
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbyssalVoidling", "AbyssalVoidling\AbyssalVoidling.csproj", "{AC88B516-635E-4112-9074-C0D0D71F1502}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FathomlessVoidling", "FathomlessVoidling\FathomlessVoidling.csproj", "{AC88B516-635E-4112-9074-C0D0D71F1502}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
