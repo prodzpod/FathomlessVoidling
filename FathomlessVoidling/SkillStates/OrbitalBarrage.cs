@@ -27,40 +27,24 @@ namespace FathomlessVoidling
     public static GameObject muzzleflashPrefab;
     private ChildLocator childLocator;
     static System.Random rand = new();
-    GameObject meteor = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulder.prefab").WaitForCompletion();
-    GameObject meteorGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulderGhost.prefab").WaitForCompletion();
-    GameObject vagrantOrb = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Vagrant/VagrantCannon.prefab").WaitForCompletion();
-    GameObject portal = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabSpawnEffect.prefab").WaitForCompletion();
-    Material boulderMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Grandparent/matGrandparentBoulderProjectile.mat").WaitForCompletion();
-    Material voidAffixMat = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/EliteVoid/matEliteVoidOverlay.mat").WaitForCompletion();
 
     public override void OnEnter()
     {
       base.OnEnter();
-
-      ProjectileController meteorController = vagrantOrb.GetComponent<ProjectileController>();
-      meteorController.cannotBeDeleted = true;
-      meteor.transform.localScale = new Vector3(2, 2, 2);
-      meteorGhost.transform.localScale = new Vector3(2, 2, 2);
-      meteorGhost.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().materials = new Material[] { boulderMat, voidAffixMat };
       this.missileStopwatch -= missileSpawnDelay;
-      if ((bool)(Object)this.sfxLocator && this.sfxLocator.barkSound != "")
-      {
-        int num1 = (int)Util.PlaySound(this.sfxLocator.barkSound, this.gameObject);
-      }
       Transform modelTransform = this.GetModelTransform();
       if (!(bool)(Object)modelTransform)
         return;
       this.childLocator = modelTransform.GetComponent<ChildLocator>();
       if (!(bool)(Object)this.childLocator)
         return;
-      int num2 = (bool)(Object)this.childLocator.FindChild(muzzleString) ? 1 : 0;
+      int num = (bool)(Object)this.childLocator.FindChild(muzzleString) ? 1 : 0;
+      int num2 = (int)Util.PlayAttackSpeedSound(new FireMissiles().fireWaveSoundString, this.gameObject, this.attackSpeedStat);
+      EffectManager.SimpleMuzzleFlash(new FireMissiles().muzzleFlashPrefab, this.gameObject, muzzleString, false);
     }
     private void FireBlob(Ray projectileRay, float bonusPitch, float bonusYaw)
     {
-      GameObject portalInstance = GameObject.Instantiate(portal, projectileRay.origin, Util.QuaternionSafeLookRotation(projectileRay.direction));
-      // portalInstance.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-      NetworkServer.Spawn(portalInstance);
+      EffectManager.SpawnEffect(FathomlessVoidling.portal, new EffectData { origin = projectileRay.origin, rotation = Util.QuaternionSafeLookRotation(projectileRay.direction) }, false);
       FireProjectileInfo noblePhantasm = new FireProjectileInfo()
       {
         position = projectileRay.origin,
@@ -69,8 +53,8 @@ namespace FathomlessVoidling
         damage = this.damageStat * FistSlam.waveProjectileDamageCoefficient,
         owner = this.gameObject,
         force = EntityStates.BrotherMonster.FistSlam.waveProjectileForce,
-        speedOverride = 200,
-        projectilePrefab = meteor
+        speedOverride = 150,
+        projectilePrefab = FathomlessVoidling.meteor
       };
       ProjectileManager.instance.FireProjectile(noblePhantasm);
     }
@@ -91,10 +75,10 @@ namespace FathomlessVoidling
           projectileRay.direction = aimRay.direction;
           float maxDistance = 1000f;
           float randX = UnityEngine.Random.Range(-100f, 100f);
-          float randY = UnityEngine.Random.Range(0f, 50f);
-          float randZ = UnityEngine.Random.Range(-100f, 100f);
+          float randY = UnityEngine.Random.Range(50f, 75f);
+          float randZ = UnityEngine.Random.Range(-25f, 25f);
           Vector3 randVector = new Vector3(randX, randY, randZ);
-          Vector3 position = new Vector3(child.position.x, child.position.y, child.position.z) + randVector;
+          Vector3 position = child.position + randVector;
           projectileRay.origin = position;
           RaycastHit hitInfo;
           {

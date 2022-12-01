@@ -18,14 +18,21 @@ namespace FathomlessVoidling
 
   public class FathomlessVoidling : BaseUnityPlugin
   {
-    static GameObject voidRaidCrabPhase1 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase1.prefab").WaitForCompletion();
-    GameObject voidRaidCrabPhase2 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase2.prefab").WaitForCompletion();
-    GameObject voidRaidCrabPhase3 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase3.prefab").WaitForCompletion();
-    GameObject safeWard = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/iscVoidRaidSafeWard.asset").WaitForCompletion();
+    private static GameObject voidRaidCrabPhase1 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase1.prefab").WaitForCompletion();
+    private static GameObject voidRaidCrabPhase2 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase2.prefab").WaitForCompletion();
+    private static GameObject voidRaidCrabPhase3 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase3.prefab").WaitForCompletion();
+    private static GameObject safeWard = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/iscVoidRaidSafeWard.asset").WaitForCompletion();
+    public static GameObject meteor = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulder.prefab").WaitForCompletion();
+    private static GameObject meteorGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulderGhost.prefab").WaitForCompletion();
+    public static GameObject portal = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabSpawnEffect.prefab").WaitForCompletion();
+    public static GameObject portal2 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidJailer/VoidJailerSpawnEffect.prefab").WaitForCompletion();
+    private static Material boulderMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Grandparent/matGrandparentBoulderProjectile.mat").WaitForCompletion();
+    private static Material voidAffixMat = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/EliteVoid/matEliteVoidOverlay.mat").WaitForCompletion();
 
     public void Awake()
     {
       On.RoR2.Run.Start += Run_Start;
+      On.EntityStates.VoidRaidCrab.Weapon.BaseFireMultiBeam.OnEnter += BaseFireMultiBeamOnEnter;
     }
     /** 
         Base Stats
@@ -38,6 +45,37 @@ namespace FathomlessVoidling
         jump 0
         projectile rotation 360
     **/
+
+    private void BaseFireMultiBeamOnEnter(On.EntityStates.VoidRaidCrab.Weapon.BaseFireMultiBeam.orig_OnEnter orig, EntityStates.VoidRaidCrab.Weapon.BaseFireMultiBeam self)
+    {
+      orig(self);
+      FireMissiles instance = new FireMissiles();
+      Quaternion quaternion = Util.QuaternionSafeLookRotation(self.GetAimRay().direction);
+      FireProjectileInfo fireProjectileInfo = new FireProjectileInfo()
+      {
+        projectilePrefab = instance.projectilePrefab,
+        position = self.muzzleTransform.position,
+        owner = self.gameObject,
+        damage = self.damageStat * instance.damageCoefficient,
+        force = instance.force
+      };
+      for (int index = 0; index < instance.numMissilesPerWave; ++index)
+      {
+        fireProjectileInfo.rotation = quaternion * instance.GetRandomRollPitch();
+        fireProjectileInfo.crit = Util.CheckRoll(self.critStat, self.characterBody.master);
+        ProjectileManager.instance.FireProjectile(fireProjectileInfo);
+      }
+    }
+
+    private void SetupProjectiles()
+    {
+      ProjectileController meteorController = meteor.GetComponent<ProjectileController>();
+      meteorController.cannotBeDeleted = true;
+      meteor.transform.localScale = new Vector3(2, 2, 2);
+      meteorGhost.transform.localScale = new Vector3(2, 2, 2);
+      meteorGhost.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().materials = new Material[] { boulderMat, voidAffixMat };
+    }
+
     private void AdjustPhase1Stats()
     {
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase1.GetComponent<CharacterBody>();
@@ -51,8 +89,45 @@ namespace FathomlessVoidling
       SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
+      SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
+
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeMultiBeam));
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(OrbitalBarrage));
+      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
+
+      ProjectileSteerTowardTarget voidRaidMissiles = new FireMissiles().projectilePrefab.GetComponent<ProjectileSteerTowardTarget>();
+      voidRaidMissiles.rotationSpeed = 180;
+
+      // CreateSpecial();
+    }
+
+    private void CreateSpecial()
+    {
+      SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
+      skillLocator.special = voidRaidCrabPhase1.AddComponent<GenericSkill>();
+
+      skillLocator.special = new GenericSkill();
+      SkillDef transpose = ScriptableObject.CreateInstance<SkillDef>();
+      transpose.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
+      transpose.activationStateMachineName = "Weapon";
+      transpose.baseMaxStock = 1;
+      transpose.baseRechargeInterval = 30f;
+      transpose.beginSkillCooldownOnSkillEnd = true;
+      transpose.canceledFromSprinting = false;
+      transpose.cancelSprintingOnActivation = false;
+      transpose.fullRestockOnAssign = true;
+      transpose.interruptPriority = EntityStates.InterruptPriority.Death;
+      transpose.isCombatSkill = true;
+      transpose.mustKeyPress = false;
+      transpose.rechargeStock = 1;
+      transpose.requiredStock = 1;
+      transpose.stockToConsume = 1;
+      SkillFamily fam = ScriptableObject.CreateInstance<SkillFamily>();
+      SkillFamily.Variant variant1 = new();
+      variant1.skillDef = transpose;
+      fam.variants = new SkillFamily.Variant[] { variant1 };
+      ContentAddition.AddSkillFamily(fam);
+      Reflection.SetFieldValue<SkillFamily>((object)skillLocator.special, "_skillFamily", fam);
     }
     private void AdjustPhase2Stats()
     {
@@ -92,6 +167,7 @@ namespace FathomlessVoidling
       //AdjustPhase2Stats();
       //AdjustPhase3Stats();
       orig(self);
+      SetupProjectiles();
       AdjustPhase1Stats();
     }
   }
