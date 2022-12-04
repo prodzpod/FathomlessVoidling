@@ -25,10 +25,15 @@ namespace FathomlessVoidling
     public static GameObject meteor = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulder.prefab").WaitForCompletion();
     private static GameObject meteorGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulderGhost.prefab").WaitForCompletion();
     public static GameObject portal = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabSpawnEffect.prefab").WaitForCompletion();
-    public static GameObject portal2 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidJailer/VoidJailerSpawnEffect.prefab").WaitForCompletion();
+    public static GameObject deathBomb = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombProjectile.prefab").WaitForCompletion();
+    public static GameObject deathBombGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombGhost.prefab").WaitForCompletion();
+    public static GameObject deathBombExplosion = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
+    public static GameObject deathBombletExplosion = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombletsExplosion.prefab").WaitForCompletion();
+    public static GameObject deathBombletGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombletsGhost.prefab").WaitForCompletion();
+    public static GameObject deathBomblet = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombletsProjectile.prefab").WaitForCompletion();
     private static Material boulderMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Grandparent/matGrandparentBoulderProjectile.mat").WaitForCompletion();
     private static Material voidAffixMat = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/EliteVoid/matEliteVoidOverlay.mat").WaitForCompletion();
-
+    public static GameObject barnacleBullet = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidBarnacle/VoidBarnacleBullet.prefab").WaitForCompletion();
     public void Awake()
     {
       On.RoR2.Run.Start += Run_Start;
@@ -90,9 +95,12 @@ namespace FathomlessVoidling
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
-
-      primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeMultiBeam));
-      secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(OrbitalBarrage));
+      utilityDef.baseRechargeInterval = 5;
+      utilityDef.baseMaxStock = 2;
+      primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(AimDisillusion));
+      primaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
+      secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Crush));
+      secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
 
       ProjectileSteerTowardTarget voidRaidMissiles = new FireMissiles().projectilePrefab.GetComponent<ProjectileSteerTowardTarget>();
@@ -101,7 +109,7 @@ namespace FathomlessVoidling
       // CreateSpecial();
     }
 
-    private void CreateSpecial()
+    /* private void CreateSpecial()
     {
       SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
       skillLocator.special = voidRaidCrabPhase1.AddComponent<GenericSkill>();
@@ -128,7 +136,7 @@ namespace FathomlessVoidling
       fam.variants = new SkillFamily.Variant[] { variant1 };
       ContentAddition.AddSkillFamily(fam);
       Reflection.SetFieldValue<SkillFamily>((object)skillLocator.special, "_skillFamily", fam);
-    }
+    } */
     private void AdjustPhase2Stats()
     {
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase2.GetComponent<CharacterBody>();

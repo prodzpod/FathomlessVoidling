@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
-  public class OrbitalBarrage : BaseState
+  public class Crush : BaseState
   {
     private float stopwatch;
     private float missileStopwatch;
@@ -44,8 +44,9 @@ namespace FathomlessVoidling
     }
     private void FireBlob(Ray projectileRay, float bonusPitch, float bonusYaw)
     {
+      int num = (int)Util.PlaySound(new EntityStates.VoidMegaCrab.SpawnState().spawnSoundString, this.gameObject);
       EffectManager.SpawnEffect(FathomlessVoidling.portal, new EffectData { origin = projectileRay.origin, rotation = Util.QuaternionSafeLookRotation(projectileRay.direction) }, false);
-      FireProjectileInfo noblePhantasm = new FireProjectileInfo()
+      FireProjectileInfo voidMeteor = new FireProjectileInfo()
       {
         position = projectileRay.origin,
         rotation = Util.QuaternionSafeLookRotation(projectileRay.direction),
@@ -56,7 +57,7 @@ namespace FathomlessVoidling
         speedOverride = 150,
         projectilePrefab = FathomlessVoidling.meteor
       };
-      ProjectileManager.instance.FireProjectile(noblePhantasm);
+      ProjectileManager.instance.FireProjectile(voidMeteor);
     }
 
     public override void FixedUpdate()
