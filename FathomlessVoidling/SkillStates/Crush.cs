@@ -77,7 +77,7 @@ namespace FathomlessVoidling
           float maxDistance = 1000f;
           float randX = UnityEngine.Random.Range(-100f, 100f);
           float randY = UnityEngine.Random.Range(50f, 75f);
-          float randZ = UnityEngine.Random.Range(-25f, 25f);
+          float randZ = UnityEngine.Random.Range(-100f, 100f);
           Vector3 randVector = new Vector3(randX, randY, randZ);
           Vector3 position = child.position + randVector;
           projectileRay.origin = position;

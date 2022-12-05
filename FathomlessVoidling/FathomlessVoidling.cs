@@ -15,6 +15,12 @@ using UnityEngine.AddressableAssets;
 namespace FathomlessVoidling
 {
   [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "1.0.0")]
+  [BepInDependency("com.bepis.r2api")]
+  [R2APISubmoduleDependency(new string[]
+    {
+        "PrefabAPI",
+        "ContentAddition"
+    })]
 
   public class FathomlessVoidling : BaseUnityPlugin
   {
@@ -34,10 +40,14 @@ namespace FathomlessVoidling
     private static Material boulderMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Grandparent/matGrandparentBoulderProjectile.mat").WaitForCompletion();
     private static Material voidAffixMat = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/EliteVoid/matEliteVoidOverlay.mat").WaitForCompletion();
     public static GameObject barnacleBullet = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidBarnacle/VoidBarnacleBullet.prefab").WaitForCompletion();
+    public static GameObject deathBombPre = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathPreExplosion.prefab").WaitForCompletion();
+    public static GameObject deathBombPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
+
     public void Awake()
     {
       On.RoR2.Run.Start += Run_Start;
       On.EntityStates.VoidRaidCrab.Weapon.BaseFireMultiBeam.OnEnter += BaseFireMultiBeamOnEnter;
+      CreateSpecial();
     }
     /** 
         Base Stats
@@ -95,8 +105,6 @@ namespace FathomlessVoidling
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
-      utilityDef.baseRechargeInterval = 5;
-      utilityDef.baseMaxStock = 2;
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
       primaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Crush));
@@ -105,21 +113,24 @@ namespace FathomlessVoidling
 
       ProjectileSteerTowardTarget voidRaidMissiles = new FireMissiles().projectilePrefab.GetComponent<ProjectileSteerTowardTarget>();
       voidRaidMissiles.rotationSpeed = 180;
-
-      // CreateSpecial();
     }
 
-    /* private void CreateSpecial()
+    private void CreateSpecial()
     {
       SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
-      skillLocator.special = voidRaidCrabPhase1.AddComponent<GenericSkill>();
+      GenericSkill skill = voidRaidCrabPhase1.AddComponent<GenericSkill>();
+      skill.skillName = "Transpose";
+      SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
+      (newFamily as ScriptableObject).name = voidRaidCrabPhase1.name + "Transpose" + "Family";
+      newFamily.variants = new SkillFamily.Variant[1];
+      skill._skillFamily = newFamily;
 
-      skillLocator.special = new GenericSkill();
       SkillDef transpose = ScriptableObject.CreateInstance<SkillDef>();
       transpose.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
+      transpose.skillNameToken = "Transpose";
       transpose.activationStateMachineName = "Weapon";
-      transpose.baseMaxStock = 1;
-      transpose.baseRechargeInterval = 30f;
+      transpose.baseMaxStock = 2;
+      transpose.baseRechargeInterval = 15f;
       transpose.beginSkillCooldownOnSkillEnd = true;
       transpose.canceledFromSprinting = false;
       transpose.cancelSprintingOnActivation = false;
@@ -130,13 +141,16 @@ namespace FathomlessVoidling
       transpose.rechargeStock = 1;
       transpose.requiredStock = 1;
       transpose.stockToConsume = 1;
-      SkillFamily fam = ScriptableObject.CreateInstance<SkillFamily>();
-      SkillFamily.Variant variant1 = new();
-      variant1.skillDef = transpose;
-      fam.variants = new SkillFamily.Variant[] { variant1 };
-      ContentAddition.AddSkillFamily(fam);
-      Reflection.SetFieldValue<SkillFamily>((object)skillLocator.special, "_skillFamily", fam);
-    } */
+
+      newFamily.variants[0] = new SkillFamily.Variant
+      {
+        skillDef = transpose,
+        viewableNode = new ViewablesCatalog.Node(transpose.skillNameToken, false, null)
+      };
+
+      ContentAddition.AddSkillFamily(newFamily);
+      skillLocator.special = skill;
+    }
     private void AdjustPhase2Stats()
     {
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase2.GetComponent<CharacterBody>();

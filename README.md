@@ -2,18 +2,22 @@
 
 The Augur of the Abyss 
 
-Phase info:
+Phase info (Inspiration ):
 
-- Phase 1 Lorem Ipsum.
-- Phase 2 Lorem Ipsum Electric Bugaloo.
-- Phase 3 Lorem Ipsum the squeakquel.
+- Phase 1 Buffed Reaver (Death Bubbles).
+- Phase 2 Buffed Devastator (Mines?).
+- Phase 3 Buffed Jailer (Oughehe).
 
-Ability info:
+Ability info (P1):
 
-- Primary Enhanced Laser Shot?
-- Secondary Orbital/Meteor Barrage: launches a bunch of grandparent rocks like a vagrant
-- Utility ImpBoss blink with damage/chance to blip?
-- Special Ground GigaLasers / Center Black Hole
+- Primary: Disillusion
+  - Fires waves of void missiles and summons tracking death bombs
+- Secondary: Crush
+  - Launches a barrage of void meteors
+- Utility: Transpose
+  - Slips deeper into the void, reappears near the survivor
+- Special: Desolate 
+  - Summons powerful void beams through the ground
 
 ## Plans
 

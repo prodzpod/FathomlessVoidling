@@ -5,6 +5,6 @@
 	"description": "Augur of the Abyss",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.2102",
-		"RiskofThunder-HookGenPatcher-1.2.3"
+		"tristanmcpherson-R2API-4.4.1"
 	]
 }
