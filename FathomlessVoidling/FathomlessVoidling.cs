@@ -97,7 +97,7 @@ namespace FathomlessVoidling
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
       utilityDef.baseRechargeInterval = 5;
       utilityDef.baseMaxStock = 2;
-      primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(AimDisillusion));
+      primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
       primaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Crush));
       secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
