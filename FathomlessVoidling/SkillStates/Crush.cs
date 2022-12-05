@@ -39,12 +39,12 @@ namespace FathomlessVoidling
       if (!(bool)(Object)this.childLocator)
         return;
       int num = (bool)(Object)this.childLocator.FindChild(muzzleString) ? 1 : 0;
-      int num2 = (int)Util.PlayAttackSpeedSound(new FireMissiles().fireWaveSoundString, this.gameObject, this.attackSpeedStat);
+      int num2 = (int)Util.PlaySound(new EntityStates.VoidRaidCrab.Weapon.FireMultiBeamSmall().enterSoundString, this.gameObject);
       EffectManager.SimpleMuzzleFlash(new FireMissiles().muzzleFlashPrefab, this.gameObject, muzzleString, false);
     }
     private void FireBlob(Ray projectileRay, float bonusPitch, float bonusYaw)
     {
-      int num = (int)Util.PlaySound(new EntityStates.VoidMegaCrab.SpawnState().spawnSoundString, this.gameObject);
+      // int num = (int)Util.PlaySound(new EntityStates.VoidRaidCrab.Weapon.FireMultiBeamSmall().enterSoundString, this.gameObject);
       EffectManager.SpawnEffect(FathomlessVoidling.portal, new EffectData { origin = projectileRay.origin, rotation = Util.QuaternionSafeLookRotation(projectileRay.direction) }, false);
       FireProjectileInfo voidMeteor = new FireProjectileInfo()
       {
