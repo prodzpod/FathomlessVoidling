@@ -16,7 +16,7 @@ using UnityEngine.AddressableAssets;
 
 namespace FathomlessVoidling
 {
-  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "1.0.0")]
+  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.6.0")]
   [BepInDependency("com.bepis.r2api")]
   [R2APISubmoduleDependency(new string[]
     {
@@ -30,8 +30,8 @@ namespace FathomlessVoidling
     private static GameObject voidRaidCrabPhase2 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase2.prefab").WaitForCompletion();
     private static GameObject voidRaidCrabPhase3 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/MiniVoidRaidCrabBodyPhase3.prefab").WaitForCompletion();
     private static GameObject safeWard = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/iscVoidRaidSafeWard.asset").WaitForCompletion();
-    public static GameObject meteor = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulder.prefab").WaitForCompletion();
-    private static GameObject meteorGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulderGhost.prefab").WaitForCompletion();
+    public static GameObject meteor = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulder.prefab").WaitForCompletion(), "VoidMeteor");
+    private static GameObject meteorGhost = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulderGhost.prefab").WaitForCompletion(), "VoidMeteorGhost");
     public static GameObject portal = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabSpawnEffect.prefab").WaitForCompletion();
     public static GameObject deathBomb = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombProjectile.prefab").WaitForCompletion();
     public static GameObject deathBombGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombGhost.prefab").WaitForCompletion();
@@ -54,6 +54,7 @@ namespace FathomlessVoidling
       // spawnEffect.transform.localScale = new Vector3(spawnEffect.transform.localScale.x + (spawnEffect.transform.localScale.x * 0.25f), spawnEffect.transform.localScale.y + (spawnEffect.transform.localScale.y * 0.25f), spawnEffect.transform.localScale.z + (spawnEffect.transform.localScale.z * 0.25f));
       // spinBeamVFX.transform.localScale = new Vector3(spinBeamVFX.transform.localScale.x / 2, spinBeamVFX.transform.localScale.y / 2, spinBeamVFX.transform.localScale.z / 2);
       CreateSpecial();
+      AddContent();
     }
     /** 
         Base Stats
@@ -67,26 +68,39 @@ namespace FathomlessVoidling
         projectile rotation 360
     **/
 
+    private void AddContent()
+    {
+      ProjectileController meteorController = meteor.GetComponent<ProjectileController>();
+      meteorController.ghost = meteorGhost.GetComponent<ProjectileGhostController>();
+      meteorController.ghostPrefab = meteorGhost;
+      ContentAddition.AddProjectile(meteor);
+    }
+
     private void SetupProjectiles()
     {
+      Logger.LogInfo("Setting Up Projectiles");
       ProjectileController meteorController = meteor.GetComponent<ProjectileController>();
       meteorController.cannotBeDeleted = true;
       meteor.transform.localScale = new Vector3(2, 2, 2);
       meteorGhost.transform.localScale = new Vector3(2, 2, 2);
       meteorGhost.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().materials = new Material[] { boulderMat, voidAffixMat };
+      Logger.LogInfo("Finished Setting Up Projectiles");
     }
 
     private void AdjustPhase1Stats()
     {
+      Logger.LogInfo("Adjusting P1 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase1.GetComponent<CharacterBody>();
+      voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
       voidRaidCrabBody.baseMaxHealth = 1100;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 67.5f;
       voidRaidCrabBody.baseAcceleration = 30;
       voidRaidCrabBody.baseArmor = 30;
-
       voidRaidCrabPhase1.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+      Logger.LogInfo("Finished Adjusting P1 Stats");
 
+      Logger.LogInfo("Adjusting P1 Skills");
       SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
@@ -103,10 +117,12 @@ namespace FathomlessVoidling
 
       ProjectileSteerTowardTarget voidRaidMissiles = new FireMissiles().projectilePrefab.GetComponent<ProjectileSteerTowardTarget>();
       voidRaidMissiles.rotationSpeed = 180;
+      Logger.LogInfo("Finished Adjusting P1 Skills");
     }
 
     private void CreateSpecial()
     {
+      Logger.LogInfo("Creating Special");
       SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
       GenericSkill skill = voidRaidCrabPhase1.AddComponent<GenericSkill>();
       skill.skillName = "Transpose";
@@ -140,55 +156,50 @@ namespace FathomlessVoidling
 
       ContentAddition.AddSkillFamily(newFamily);
       skillLocator.special = skill;
+      Logger.LogInfo("Finished Creating Special");
     }
     private void AdjustPhase2Stats()
     {
+      Logger.LogInfo("Adjusting P2 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase2.GetComponent<CharacterBody>();
       voidRaidCrabBody.baseMaxHealth = 1100;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;
       voidRaidCrabBody.baseArmor = 30;
-      voidRaidCrabPhase2.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-
-      SkillLocator skillLocator = voidRaidCrabBody.skillLocator;
-      SkillDef primary = skillLocator.primary.skillFamily.variants[0].skillDef;
-      SkillDef secondary = skillLocator.secondary.skillFamily.variants[0].skillDef;
-      SkillDef utility = skillLocator.utility.skillFamily.variants[0].skillDef;
-      SkillDef special = skillLocator.special.skillFamily.variants[0].skillDef;
+      voidRaidCrabPhase2.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+      Logger.LogInfo("Finished Adjusting P2 Stats");
     }
     private void AdjustPhase3Stats()
     {
+      Logger.LogInfo("Adjusting P3 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase3.GetComponent<CharacterBody>();
       voidRaidCrabBody.baseMaxHealth = 1100;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;
       voidRaidCrabBody.baseArmor = 30;
-      voidRaidCrabPhase3.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-
-      SkillLocator skillLocator = voidRaidCrabBody.skillLocator;
-      SkillDef primary = skillLocator.primary.skillFamily.variants[0].skillDef;
-      SkillDef secondary = skillLocator.secondary.skillFamily.variants[0].skillDef;
-      SkillDef utility = skillLocator.utility.skillFamily.variants[0].skillDef;
-      SkillDef special = skillLocator.special.skillFamily.variants[0].skillDef;
+      voidRaidCrabPhase3.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+      Logger.LogInfo("Finished Adjusting P3 Stats");
     }
 
     private void RunStart(On.RoR2.Run.orig_Start orig, Run self)
     {
-      //AdjustPhase2Stats();
-      //AdjustPhase3Stats();
       orig(self);
       SetupProjectiles();
       AdjustPhase1Stats();
+      AdjustPhase2Stats();
+      AdjustPhase3Stats();
     }
 
     private void MasterChanges(CharacterMaster master)
     {
-      if (master.name == "MiniVoidRaidCrabMasterPhase1")
+      if (master.name == "MiniVoidRaidCrabMasterPhase1(Clone)")
       {
+        Logger.LogInfo("Editing P1 Special AISkillDriver");
         AISkillDriver aiSkillDriverPrimary = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Primary)).First<AISkillDriver>();
         AISkillDriver aiSkillDriverSpecial = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Special)).First<AISkillDriver>();
+        aiSkillDriverSpecial.requiredSkill = voidRaidCrabPhase1.GetComponent<SkillLocator>().special.skillFamily.variants[0].skillDef;
         aiSkillDriverSpecial.activationRequiresAimConfirmation = aiSkillDriverPrimary.activationRequiresAimConfirmation;
         aiSkillDriverSpecial.activationRequiresAimTargetLoS = aiSkillDriverPrimary.activationRequiresAimTargetLoS;
         aiSkillDriverSpecial.activationRequiresTargetLoS = aiSkillDriverPrimary.activationRequiresTargetLoS;
@@ -198,7 +209,7 @@ namespace FathomlessVoidling
         aiSkillDriverSpecial.minTargetHealthFraction = aiSkillDriverPrimary.minTargetHealthFraction;
         aiSkillDriverSpecial.requireSkillReady = aiSkillDriverPrimary.requireSkillReady;
         aiSkillDriverSpecial.maxDistance = 1000;
-        aiSkillDriverSpecial.timesSelected = aiSkillDriverPrimary.timesSelected;
+        Logger.LogInfo("Finished Editing P1 Special AISkillDriver");
       }
     }
   }

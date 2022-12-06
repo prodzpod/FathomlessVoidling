@@ -54,7 +54,7 @@ namespace FathomlessVoidling
       Ray beamRay;
       Vector3 beamEndPos;
       this.CalcBeamPath(out beamRay, out beamEndPos);
-      beamEndPos += new Vector3(UnityEngine.Random.Range(-15f, 15f), UnityEngine.Random.Range(-15f, 15f), UnityEngine.Random.Range(-15f, 15f));
+      beamEndPos += new Vector3(UnityEngine.Random.Range(-15f, 15f), UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-15f, 15f));
       new BlastAttack()
       {
         attacker = this.gameObject,

@@ -1,8 +1,8 @@
 ﻿{
 	"name": "FathomlessVoidling",
-	"version_number": "0.5.0",
-	"website_url": "",
-	"description": "Augur of the Abyss",
+	"version_number": "0.6.0",
+	"website_url": "https://github.com/nuxlar/FathomlessVoidling",
+	"description": "The Augur of the Abyss emerges **WIP**",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.2102",
 		"tristanmcpherson-R2API-4.4.1"
