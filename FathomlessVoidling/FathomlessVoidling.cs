@@ -2,12 +2,14 @@ using BepInEx;
 using RoR2;
 using RoR2.Skills;
 using RoR2.Projectile;
+using RoR2.CharacterAI;
 using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
 using R2API;
 using R2API.Utils;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
@@ -47,7 +49,8 @@ namespace FathomlessVoidling
 
     public void Awake()
     {
-      On.RoR2.Run.Start += Run_Start;
+      On.RoR2.Run.Start += RunStart;
+      CharacterMaster.onStartGlobal += MasterChanges;
       // spawnEffect.transform.localScale = new Vector3(spawnEffect.transform.localScale.x + (spawnEffect.transform.localScale.x * 0.25f), spawnEffect.transform.localScale.y + (spawnEffect.transform.localScale.y * 0.25f), spawnEffect.transform.localScale.z + (spawnEffect.transform.localScale.z * 0.25f));
       // spinBeamVFX.transform.localScale = new Vector3(spinBeamVFX.transform.localScale.x / 2, spinBeamVFX.transform.localScale.y / 2, spinBeamVFX.transform.localScale.z / 2);
       CreateSpecial();
@@ -81,6 +84,7 @@ namespace FathomlessVoidling
       voidRaidCrabBody.baseMoveSpeed = 67.5f;
       voidRaidCrabBody.baseAcceleration = 30;
       voidRaidCrabBody.baseArmor = 30;
+
       voidRaidCrabPhase1.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
 
       SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
@@ -88,6 +92,7 @@ namespace FathomlessVoidling
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
       SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
+
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
       primaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Crush));
@@ -169,13 +174,32 @@ namespace FathomlessVoidling
       SkillDef special = skillLocator.special.skillFamily.variants[0].skillDef;
     }
 
-    private void Run_Start(On.RoR2.Run.orig_Start orig, Run self)
+    private void RunStart(On.RoR2.Run.orig_Start orig, Run self)
     {
       //AdjustPhase2Stats();
       //AdjustPhase3Stats();
       orig(self);
       SetupProjectiles();
       AdjustPhase1Stats();
+    }
+
+    private void MasterChanges(CharacterMaster master)
+    {
+      if (master.name == "MiniVoidRaidCrabMasterPhase1")
+      {
+        AISkillDriver aiSkillDriverPrimary = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Primary)).First<AISkillDriver>();
+        AISkillDriver aiSkillDriverSpecial = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Special)).First<AISkillDriver>();
+        aiSkillDriverSpecial.activationRequiresAimConfirmation = aiSkillDriverPrimary.activationRequiresAimConfirmation;
+        aiSkillDriverSpecial.activationRequiresAimTargetLoS = aiSkillDriverPrimary.activationRequiresAimTargetLoS;
+        aiSkillDriverSpecial.activationRequiresTargetLoS = aiSkillDriverPrimary.activationRequiresTargetLoS;
+        aiSkillDriverSpecial.minUserHealthFraction = aiSkillDriverPrimary.minUserHealthFraction;
+        aiSkillDriverSpecial.maxUserHealthFraction = aiSkillDriverPrimary.maxUserHealthFraction;
+        aiSkillDriverSpecial.maxTargetHealthFraction = aiSkillDriverPrimary.maxTargetHealthFraction;
+        aiSkillDriverSpecial.minTargetHealthFraction = aiSkillDriverPrimary.minTargetHealthFraction;
+        aiSkillDriverSpecial.requireSkillReady = aiSkillDriverPrimary.requireSkillReady;
+        aiSkillDriverSpecial.maxDistance = 1000;
+        aiSkillDriverSpecial.timesSelected = aiSkillDriverPrimary.timesSelected;
+      }
     }
   }
 }
