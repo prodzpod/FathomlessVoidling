@@ -42,11 +42,14 @@ namespace FathomlessVoidling
     public static GameObject barnacleBullet = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidBarnacle/VoidBarnacleBullet.prefab").WaitForCompletion();
     public static GameObject deathBombPre = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathPreExplosion.prefab").WaitForCompletion();
     public static GameObject deathBombPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
+    public static GameObject spawnEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpawnEffect.prefab").WaitForCompletion();
+    public static GameObject spinBeamVFX = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpinBeamVFX.prefab").WaitForCompletion();
 
     public void Awake()
     {
       On.RoR2.Run.Start += Run_Start;
-      On.EntityStates.VoidRaidCrab.Weapon.BaseFireMultiBeam.OnEnter += BaseFireMultiBeamOnEnter;
+      // spawnEffect.transform.localScale = new Vector3(spawnEffect.transform.localScale.x + (spawnEffect.transform.localScale.x * 0.25f), spawnEffect.transform.localScale.y + (spawnEffect.transform.localScale.y * 0.25f), spawnEffect.transform.localScale.z + (spawnEffect.transform.localScale.z * 0.25f));
+      // spinBeamVFX.transform.localScale = new Vector3(spinBeamVFX.transform.localScale.x / 2, spinBeamVFX.transform.localScale.y / 2, spinBeamVFX.transform.localScale.z / 2);
       CreateSpecial();
     }
     /** 
@@ -60,27 +63,6 @@ namespace FathomlessVoidling
         jump 0
         projectile rotation 360
     **/
-
-    private void BaseFireMultiBeamOnEnter(On.EntityStates.VoidRaidCrab.Weapon.BaseFireMultiBeam.orig_OnEnter orig, EntityStates.VoidRaidCrab.Weapon.BaseFireMultiBeam self)
-    {
-      orig(self);
-      FireMissiles instance = new FireMissiles();
-      Quaternion quaternion = Util.QuaternionSafeLookRotation(self.GetAimRay().direction);
-      FireProjectileInfo fireProjectileInfo = new FireProjectileInfo()
-      {
-        projectilePrefab = instance.projectilePrefab,
-        position = self.muzzleTransform.position,
-        owner = self.gameObject,
-        damage = self.damageStat * instance.damageCoefficient,
-        force = instance.force
-      };
-      for (int index = 0; index < instance.numMissilesPerWave; ++index)
-      {
-        fireProjectileInfo.rotation = quaternion * instance.GetRandomRollPitch();
-        fireProjectileInfo.crit = Util.CheckRoll(self.critStat, self.characterBody.master);
-        ProjectileManager.instance.FireProjectile(fireProjectileInfo);
-      }
-    }
 
     private void SetupProjectiles()
     {
@@ -105,11 +87,14 @@ namespace FathomlessVoidling
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
+      SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
       primaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Crush));
       secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
-      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
+      secondaryDef.baseRechargeInterval = 20f;
+      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeDesolate));
+      specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
 
       ProjectileSteerTowardTarget voidRaidMissiles = new FireMissiles().projectilePrefab.GetComponent<ProjectileSteerTowardTarget>();
       voidRaidMissiles.rotationSpeed = 180;
@@ -130,7 +115,7 @@ namespace FathomlessVoidling
       transpose.skillNameToken = "Transpose";
       transpose.activationStateMachineName = "Weapon";
       transpose.baseMaxStock = 2;
-      transpose.baseRechargeInterval = 15f;
+      transpose.baseRechargeInterval = 10f;
       transpose.beginSkillCooldownOnSkillEnd = true;
       transpose.canceledFromSprinting = false;
       transpose.cancelSprintingOnActivation = false;

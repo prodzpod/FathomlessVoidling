@@ -44,7 +44,6 @@ namespace FathomlessVoidling
     }
     private void FireBlob(Ray projectileRay, float bonusPitch, float bonusYaw)
     {
-      // int num = (int)Util.PlaySound(new EntityStates.VoidRaidCrab.Weapon.FireMultiBeamSmall().enterSoundString, this.gameObject);
       EffectManager.SpawnEffect(FathomlessVoidling.portal, new EffectData { origin = projectileRay.origin, rotation = Util.QuaternionSafeLookRotation(projectileRay.direction) }, false);
       FireProjectileInfo voidMeteor = new FireProjectileInfo()
       {

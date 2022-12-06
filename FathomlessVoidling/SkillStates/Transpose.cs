@@ -19,9 +19,7 @@ namespace FathomlessVoidling
   public class Transpose : BlinkState
   {
     new public int blinkDistance = 1000;
-    public static GameObject blinkPrefab;
-    public static Material destealthMaterial;
-    public static float duration = 2f;
+    public new float duration = 2f;
     private float stopwatch;
 
     public override void OnEnter()
@@ -59,7 +57,7 @@ namespace FathomlessVoidling
     public override void FixedUpdate()
     {
       this.stopwatch += Time.fixedDeltaTime;
-      if ((double)this.stopwatch < (double)Transpose.duration || !this.isAuthority)
+      if ((double)this.stopwatch < (double)this.duration || !this.isAuthority)
         return;
       this.rigidbodyMotor.AddDisplacement(this.blinkDestination);
       this.CreateBlinkEffect(this.characterBody.corePosition);
