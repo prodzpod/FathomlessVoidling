@@ -28,6 +28,15 @@ Ability info (P1):
 
 ## Changelog
 
+**0.6.1**
+
+- Reduces Crush AoE by 25%
+- Reduces Crush damage
+- Reduces Desolate laser damage by 50%
+- Reduces Desolate pool damage by 75%
+- Prevents Voidling from Blinking out of bounds and dying
+- Adds a Deep Void portal to soup island so you can choose (to be polished)
+
 **0.6.0**
 
 - Phase 1 Kit and Stats completed

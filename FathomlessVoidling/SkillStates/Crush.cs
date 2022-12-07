@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
 using EntityStates;
+using EntityStates.GrandParentBoss;
 using EntityStates.VagrantMonster.Weapon;
 using EntityStates.BrotherMonster;
 using EntityStates.VoidRaidCrab;
@@ -50,9 +51,9 @@ namespace FathomlessVoidling
         position = projectileRay.origin,
         rotation = Util.QuaternionSafeLookRotation(projectileRay.direction),
         crit = Util.CheckRoll(this.critStat, this.characterBody.master),
-        damage = this.damageStat * FistSlam.waveProjectileDamageCoefficient,
+        damage = this.damageStat * (new FireSecondaryProjectile().damageCoefficient * 2),
         owner = this.gameObject,
-        force = EntityStates.BrotherMonster.FistSlam.waveProjectileForce,
+        force = (new FireSecondaryProjectile().force * 2),
         speedOverride = 150,
         projectilePrefab = FathomlessVoidling.meteor
       };

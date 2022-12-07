@@ -60,7 +60,7 @@ namespace FathomlessVoidling
         attacker = this.gameObject,
         inflictor = this.gameObject,
         teamIndex = TeamComponent.GetObjectTeam(this.gameObject),
-        baseDamage = (this.damageStat * Desolate.blastDamageCoefficient),
+        baseDamage = this.damageStat * (Desolate.blastDamageCoefficient / 2),
         baseForce = Desolate.blastForceMagnitude,
         position = beamEndPos,
         radius = Desolate.blastRadius,
@@ -114,7 +114,7 @@ namespace FathomlessVoidling
         projectilePrefab = new FireMultiBeamFinale().projectilePrefab,
         position = beamEnd + Vector3.up * new FireMultiBeamFinale().projectileVerticalSpawnOffset,
         owner = this.gameObject,
-        damage = this.damageStat * new FireMultiBeamFinale().projectileDamageCoefficient,
+        damage = this.damageStat * (new FireMultiBeamFinale().projectileDamageCoefficient / 6),
         crit = Util.CheckRoll(this.critStat, this.characterBody.master)
       });
     }
