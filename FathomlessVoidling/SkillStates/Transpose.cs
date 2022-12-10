@@ -42,7 +42,7 @@ namespace FathomlessVoidling
       this.CreateBlinkEffect(Util.GetCorePosition(this.gameObject));
     }
 
-    private void CreateBlinkEffect(Vector3 origin1)
+    private new void CreateBlinkEffect(Vector3 origin1)
     {
       int num = (int)Util.PlaySound(new EntityStates.VoidRaidCrab.Weapon.FireMultiBeamFinale().enterSoundString, this.gameObject);
       EffectManager.SimpleMuzzleFlash(FathomlessVoidling.deathBombPre, this.gameObject, new FireMissiles().muzzleName, false);
@@ -64,7 +64,7 @@ namespace FathomlessVoidling
       this.outer.SetNextStateToMain();
     }
 
-    private void CalculateBlinkDestination()
+    private new void CalculateBlinkDestination()
     {
       Vector3 vector3 = Vector3.zero;
       Ray aimRay = this.GetAimRay();
@@ -83,7 +83,7 @@ namespace FathomlessVoidling
       this.blinkDestination = this.transform.position;
       this.blinkStart = this.transform.position;
       NodeGraph groundNodes = SceneInfo.instance.groundNodes;
-      groundNodes.GetNodePosition(groundNodes.FindClosestNode(vector3, this.characterBody.hullClassification), out this.blinkDestination);
+      groundNodes.GetNodePosition(groundNodes.FindClosestNodeWithFlagConditions(vector3, this.characterBody.hullClassification, NodeFlags.None, NodeFlags.NoCharacterSpawn, true), out this.blinkDestination);
     }
 
     public override void OnExit()

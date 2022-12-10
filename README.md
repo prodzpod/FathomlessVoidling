@@ -1,6 +1,6 @@
 # Fathomless Voidling
 
-A Work In Progress of a Voidling rework mod, releasing it early with the intent on getting feedback/bugs before a 1.0 release. Report bugs in the github's issues tab and reach out on Discord (in either the Official RoR2 Discord / the Modding Discord) with any feedback. Currently only Phase 1 is reworked but the stats of the other phases have been reduced to Mithrix's level so you can continue the whole "fight". Stats are currently Mithrix level so Voidling is an actual alt final boss and not a DPS check, will have stat configs on full release.
+A Work In Progress of a Voidling rework mod, releasing it early with the intent on getting feedback/bugs before a 1.0 release. Report bugs in the github's issues tab and reach out on Discord (in either the Official RoR2 Discord / the Modding Discord) with any feedback. Currently only Phase 1 is reworked but the stats of the other phases have been reduced to Mithrix's level so you can continue the whole "fight". Stats are currently Mithrix level so Voidling is an actual alt final boss and not a DPS check, will have stat configs on full release. There's a Deep Void portal on soup island (moon cauldrons) that will take you directly to Voidling if you don't want to fight Mithrix or spend coins.
 
 Phase info:
 
@@ -30,18 +30,15 @@ Ability info (P1):
 
 **0.6.2**
 
+- Fixes blink to stay near donut
+- Fixes Interrupt States so blink doesn't interrupt skills mid-fire
 - Increased CD for Transpose (20 sec total)
 - Increased CD for Crush (40 sec total)
 - Decreased CD for Desolate (30 sec total)
 - Reduced Desolate duration (4 sec total)
 - Increased Crush duration (6 sec total)
-- Added a charge state to Crush (more obvious when it's going to activate)
-
-- Increase CD on crush DONE
-- Give Crush a charge up
-- Fix blink to only happen on donut nodes
-- Reduce CD on laser DONE
-- Let captain use abilities in Planetarium DONE
+- Adds a charge state to Crush (more obvious when it's going to activate)
+- Adds Captain abilities to the Planetarium (not really an alt boss if u can't use half ur kit)
 
 **0.6.1**
 

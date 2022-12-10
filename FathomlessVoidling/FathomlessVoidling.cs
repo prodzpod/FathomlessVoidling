@@ -16,7 +16,7 @@ using UnityEngine.AddressableAssets;
 
 namespace FathomlessVoidling
 {
-  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.6.1")]
+  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.6.2")]
   [BepInDependency("com.bepis.r2api")]
   [R2APISubmoduleDependency(new string[]
     {
