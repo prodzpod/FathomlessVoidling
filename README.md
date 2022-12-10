@@ -28,6 +28,21 @@ Ability info (P1):
 
 ## Changelog
 
+**0.6.2**
+
+- Increased CD for Transpose (20 sec total)
+- Increased CD for Crush (40 sec total)
+- Decreased CD for Desolate (30 sec total)
+- Reduced Desolate duration (4 sec total)
+- Increased Crush duration (6 sec total)
+- Added a charge state to Crush (more obvious when it's going to activate)
+
+- Increase CD on crush DONE
+- Give Crush a charge up
+- Fix blink to only happen on donut nodes
+- Reduce CD on laser DONE
+- Let captain use abilities in Planetarium DONE
+
 **0.6.1**
 
 - Reduces Crush AoE by 25%

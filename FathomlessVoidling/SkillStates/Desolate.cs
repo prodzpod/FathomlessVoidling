@@ -17,7 +17,7 @@ namespace FathomlessVoidling
   {
     private float stopwatch;
     private float missileStopwatch;
-    public float baseDuration = 6;
+    public float baseDuration = 4;
     public static string muzzleString = BaseMultiBeamState.muzzleName;
     public static float missileSpawnFrequency = 6;
     public static float missileSpawnDelay = 0;

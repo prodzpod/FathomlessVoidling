@@ -1,16 +1,9 @@
 using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.AddressableAssets;
 using EntityStates;
 using EntityStates.GrandParentBoss;
-using EntityStates.VagrantMonster.Weapon;
-using EntityStates.BrotherMonster;
-using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
-using EntityStates.BrotherMonster.Weapon;
-using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
@@ -18,7 +11,7 @@ namespace FathomlessVoidling
   {
     private float stopwatch;
     private float missileStopwatch;
-    public static float baseDuration = 4;
+    public static float baseDuration = 6;
     public static string muzzleString = BaseMultiBeamState.muzzleName;
     public static float missileSpawnFrequency = 6;
     public static float missileSpawnDelay = 0;
@@ -40,8 +33,6 @@ namespace FathomlessVoidling
       if (!(bool)(Object)this.childLocator)
         return;
       int num = (bool)(Object)this.childLocator.FindChild(muzzleString) ? 1 : 0;
-      int num2 = (int)Util.PlaySound(new EntityStates.VoidRaidCrab.Weapon.FireMultiBeamSmall().enterSoundString, this.gameObject);
-      EffectManager.SimpleMuzzleFlash(new FireMissiles().muzzleFlashPrefab, this.gameObject, muzzleString, false);
     }
     private void FireBlob(Ray projectileRay, float bonusPitch, float bonusYaw)
     {
@@ -93,5 +84,7 @@ namespace FathomlessVoidling
         this.outer.SetNextStateToMain();
       }
     }
+
+    public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
   }
 }

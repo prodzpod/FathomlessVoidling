@@ -47,14 +47,17 @@ namespace FathomlessVoidling
     public static GameObject spawnEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpawnEffect.prefab").WaitForCompletion();
     public static GameObject spinBeamVFX = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpinBeamVFX.prefab").WaitForCompletion();
     public static SpawnCard deepVoidCard = Addressables.LoadAssetAsync<SpawnCard>("RoR2/DLC1/DeepVoidPortal/iscDeepVoidPortal.asset").WaitForCompletion();
+    public static SceneDef voidRaid = Addressables.LoadAssetAsync<SceneDef>("RoR2/DLC1/voidraid/voidraid.asset").WaitForCompletion();
 
     public void Awake()
     {
       On.RoR2.Run.Start += RunStart;
       On.RoR2.Stage.Start += StageStart;
+      On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.OnEnter += BaseVacuumAttackStateOnEnter;
       CharacterMaster.onStartGlobal += MasterChanges;
       // spawnEffect.transform.localScale = new Vector3(spawnEffect.transform.localScale.x + (spawnEffect.transform.localScale.x * 0.25f), spawnEffect.transform.localScale.y + (spawnEffect.transform.localScale.y * 0.25f), spawnEffect.transform.localScale.z + (spawnEffect.transform.localScale.z * 0.25f));
       // spinBeamVFX.transform.localScale = new Vector3(spinBeamVFX.transform.localScale.x / 2, spinBeamVFX.transform.localScale.y / 2, spinBeamVFX.transform.localScale.z / 2);
+      voidRaid.blockOrbitalSkills = false;
       CreateSpecial();
       AddContent();
     }
@@ -69,8 +72,24 @@ namespace FathomlessVoidling
         jump 0
         projectile rotation 360
         -158.7 -152.8 -389
+        Body
+        3.3
+        SuckStart
+        SuckLoop
+        10
+        SuckExit
+        3.3
+        Suck.playbackRate
     **/
+    private void BaseVacuumAttackStateOnEnter(On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.orig_OnEnter orig, EntityStates.VoidRaidCrab.BaseVacuumAttackState self)
+    {
+      orig(self);
+      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.animLayerName}" });
+      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.baseDuration}" });
+      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.animStateName}" });
+      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.animPlaybackRateParamName}" });
 
+    }
     private void AddContent()
     {
       ProjectileController meteorController = meteor.GetComponent<ProjectileController>();
@@ -100,7 +119,6 @@ namespace FathomlessVoidling
       voidRaidCrabBody.baseMoveSpeed = 67.5f;
       voidRaidCrabBody.baseAcceleration = 30;
       voidRaidCrabBody.baseArmor = 30;
-      voidRaidCrabPhase1.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
       Logger.LogInfo("Finished Adjusting P1 Stats");
 
       Logger.LogInfo("Adjusting P1 Skills");
@@ -111,11 +129,11 @@ namespace FathomlessVoidling
       SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
 
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
-      primaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
-      secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Crush));
+      secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeCrush));
       secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
-      secondaryDef.baseRechargeInterval = 20f;
+      secondaryDef.baseRechargeInterval = 40f;
       utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeDesolate));
+      utilityDef.baseRechargeInterval = 30f;
       specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
 
       ProjectileSteerTowardTarget voidRaidMissiles = new FireMissiles().projectilePrefab.GetComponent<ProjectileSteerTowardTarget>();
@@ -138,13 +156,13 @@ namespace FathomlessVoidling
       transpose.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
       transpose.skillNameToken = "Transpose";
       transpose.activationStateMachineName = "Weapon";
-      transpose.baseMaxStock = 2;
-      transpose.baseRechargeInterval = 10f;
+      transpose.baseMaxStock = 1;
+      transpose.baseRechargeInterval = 20f;
       transpose.beginSkillCooldownOnSkillEnd = true;
       transpose.canceledFromSprinting = false;
       transpose.cancelSprintingOnActivation = false;
       transpose.fullRestockOnAssign = true;
-      transpose.interruptPriority = EntityStates.InterruptPriority.Death;
+      transpose.interruptPriority = EntityStates.InterruptPriority.Skill;
       transpose.isCombatSkill = true;
       transpose.mustKeyPress = false;
       transpose.rechargeStock = 1;
@@ -170,7 +188,6 @@ namespace FathomlessVoidling
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;
       voidRaidCrabBody.baseArmor = 30;
-      voidRaidCrabPhase2.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
       Logger.LogInfo("Finished Adjusting P2 Stats");
     }
     private void AdjustPhase3Stats()
@@ -182,7 +199,6 @@ namespace FathomlessVoidling
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;
       voidRaidCrabBody.baseArmor = 30;
-      voidRaidCrabPhase3.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
       Logger.LogInfo("Finished Adjusting P3 Stats");
     }
 

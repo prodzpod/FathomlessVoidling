@@ -18,7 +18,7 @@ namespace FathomlessVoidling
 {
   public class Transpose : BlinkState
   {
-    new public int blinkDistance = 1000;
+    new public int blinkDistance = 500;
     public new float duration = 2f;
     private float stopwatch;
 
@@ -109,6 +109,6 @@ namespace FathomlessVoidling
         this.rigidbodyMotor.enabled = true;
     }
 
-    public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.PrioritySkill;
+    public override InterruptPriority GetMinimumInterruptPriority() => InterruptPriority.Skill;
   }
 }
