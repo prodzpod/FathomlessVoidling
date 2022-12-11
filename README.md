@@ -30,6 +30,10 @@ Ability info (P1):
 
 **0.6.2**
 
+- Fixes buffed HP value
+
+**0.6.2**
+
 - Fixes blink to stay near donut
 - Fixes Interrupt States so blink doesn't interrupt skills mid-fire
 - Increased CD for Transpose (20 sec total)

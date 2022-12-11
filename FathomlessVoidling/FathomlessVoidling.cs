@@ -16,7 +16,7 @@ using UnityEngine.AddressableAssets;
 
 namespace FathomlessVoidling
 {
-  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.6.2")]
+  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.6.3")]
   [BepInDependency("com.bepis.r2api")]
   [R2APISubmoduleDependency(new string[]
     {
@@ -53,7 +53,6 @@ namespace FathomlessVoidling
     {
       On.RoR2.Run.Start += RunStart;
       On.RoR2.Stage.Start += StageStart;
-      On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.OnEnter += BaseVacuumAttackStateOnEnter;
       CharacterMaster.onStartGlobal += MasterChanges;
       // spawnEffect.transform.localScale = new Vector3(spawnEffect.transform.localScale.x + (spawnEffect.transform.localScale.x * 0.25f), spawnEffect.transform.localScale.y + (spawnEffect.transform.localScale.y * 0.25f), spawnEffect.transform.localScale.z + (spawnEffect.transform.localScale.z * 0.25f));
       // spinBeamVFX.transform.localScale = new Vector3(spinBeamVFX.transform.localScale.x / 2, spinBeamVFX.transform.localScale.y / 2, spinBeamVFX.transform.localScale.z / 2);
@@ -81,15 +80,7 @@ namespace FathomlessVoidling
         3.3
         Suck.playbackRate
     **/
-    private void BaseVacuumAttackStateOnEnter(On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.orig_OnEnter orig, EntityStates.VoidRaidCrab.BaseVacuumAttackState self)
-    {
-      orig(self);
-      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.animLayerName}" });
-      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.baseDuration}" });
-      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.animStateName}" });
-      Chat.AddMessage(new Chat.SimpleChatMessage() { baseToken = $"layername {self.animPlaybackRateParamName}" });
 
-    }
     private void AddContent()
     {
       ProjectileController meteorController = meteor.GetComponent<ProjectileController>();
@@ -115,6 +106,7 @@ namespace FathomlessVoidling
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase1.GetComponent<CharacterBody>();
       voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
       voidRaidCrabBody.baseMaxHealth = 1100;
+      voidRaidCrabBody.levelMaxHealth = 325;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 67.5f;
       voidRaidCrabBody.baseAcceleration = 30;
@@ -184,6 +176,7 @@ namespace FathomlessVoidling
       Logger.LogInfo("Adjusting P2 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase2.GetComponent<CharacterBody>();
       voidRaidCrabBody.baseMaxHealth = 1100;
+      voidRaidCrabBody.levelMaxHealth = 325;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;
@@ -195,6 +188,7 @@ namespace FathomlessVoidling
       Logger.LogInfo("Adjusting P3 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase3.GetComponent<CharacterBody>();
       voidRaidCrabBody.baseMaxHealth = 1100;
+      voidRaidCrabBody.levelMaxHealth = 325;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;
