@@ -105,8 +105,8 @@ namespace FathomlessVoidling
       Logger.LogInfo("Adjusting P1 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase1.GetComponent<CharacterBody>();
       voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
-      voidRaidCrabBody.baseMaxHealth = 1100;
-      voidRaidCrabBody.levelMaxHealth = 325;
+      voidRaidCrabBody.baseMaxHealth = 1250;
+      voidRaidCrabBody.levelMaxHealth = 350;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 67.5f;
       voidRaidCrabBody.baseAcceleration = 30;
@@ -175,8 +175,8 @@ namespace FathomlessVoidling
     {
       Logger.LogInfo("Adjusting P2 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase2.GetComponent<CharacterBody>();
-      voidRaidCrabBody.baseMaxHealth = 1100;
-      voidRaidCrabBody.levelMaxHealth = 325;
+      voidRaidCrabBody.baseMaxHealth = 1250;
+      voidRaidCrabBody.levelMaxHealth = 350;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;
@@ -187,8 +187,8 @@ namespace FathomlessVoidling
     {
       Logger.LogInfo("Adjusting P3 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase3.GetComponent<CharacterBody>();
-      voidRaidCrabBody.baseMaxHealth = 1100;
-      voidRaidCrabBody.levelMaxHealth = 325;
+      voidRaidCrabBody.baseMaxHealth = 1250;
+      voidRaidCrabBody.levelMaxHealth = 350;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
       voidRaidCrabBody.baseMoveSpeed = 90;
       voidRaidCrabBody.baseAcceleration = 45;

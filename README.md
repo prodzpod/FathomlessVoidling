@@ -11,13 +11,35 @@ Phase info:
 Ability info (P1):
 
 - Primary: Disillusion
-  - Fires waves of void missiles and summons tracking death bombs
+  - Fires waves of void missiles and summons slow tracking death bombs that explode with bomblets
 - Secondary: Crush
   - Launches a barrage of void meteors
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
 - Special: Desolate 
   - Launches an inaccurate barrage of lasers that rend whatever they touch
+
+Ability info (P2):
+
+- Primary: Disill??usion
+  - Fires waves of void missiles and summons faster tracking death bombs
+- Secondary: C?rush
+  - Creates a black hole in the center of the arena
+- Utility: Transp?ose
+  - Slips deeper into the void, damaging, reappears near the target
+- Special: Des?olate?
+  - Random beams sprout from the ground
+
+Ability info (P3):
+
+- Primary: ?Disill??usio?n
+  - Fires waves of void missiles and summons faster tracking death bombs that move
+- Secondary: C?rush?
+  - Launches a barrage of void meteors
+- Utility: Tr?ansp??ose
+  - Slips deeper into the void, death, reappears near the target
+- Special: D?es?olate? 
+  - Creates a black hole in the center of the arena? Planetary Devastation
 
 ## Plans
 
@@ -27,6 +49,12 @@ Ability info (P1):
 - Release (bug fixes, tweaks, polish) (1.0.0)
 
 ## Changelog
+
+**0.7.0**
+
+- Completes Phase 2 kit
+- Slightly buffs HP (1100 -> 1250 base | 325 -> 350 level)
+- Slows down meteor speed (150 -> 100)
 
 **0.6.2**
 

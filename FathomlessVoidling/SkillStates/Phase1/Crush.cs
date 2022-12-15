@@ -45,7 +45,7 @@ namespace FathomlessVoidling
         damage = this.damageStat * (new FireSecondaryProjectile().damageCoefficient * 2),
         owner = this.gameObject,
         force = (new FireSecondaryProjectile().force * 2),
-        speedOverride = 150,
+        speedOverride = 100,
         projectilePrefab = FathomlessVoidling.meteor
       };
       ProjectileManager.instance.FireProjectile(voidMeteor);
