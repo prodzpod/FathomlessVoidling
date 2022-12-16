@@ -43,7 +43,6 @@ Ability info (P3):
 
 ## Plans
 
-- Complete Phase 2 Kit (0.7.0)
 - Complete Phase 3 Kit (0.8.0)
 - Add config for stats/skills (0.9.0)
 - Release (bug fixes, tweaks, polish) (1.0.0)
