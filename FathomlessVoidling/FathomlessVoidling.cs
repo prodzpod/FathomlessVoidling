@@ -33,6 +33,9 @@ namespace FathomlessVoidling
     public static GameObject meteor = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulder.prefab").WaitForCompletion(), "VoidMeteor");
     private static GameObject meteorGhost = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulderGhost.prefab").WaitForCompletion(), "VoidMeteorGhost");
     public static GameObject portal = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabSpawnEffect.prefab").WaitForCompletion();
+    public static GameObject deathBomb3 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidJailer/VoidJailerDeathBombProjectile.prefab").WaitForCompletion();
+
+    public static GameObject deathBomb2 = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierDeathBombProjectile.prefab").WaitForCompletion();
     public static GameObject deathBomb = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombProjectile.prefab").WaitForCompletion();
     public static GameObject deathBombGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombGhost.prefab").WaitForCompletion();
     public static GameObject deathBombExplosion = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
@@ -54,6 +57,7 @@ namespace FathomlessVoidling
       On.RoR2.Run.Start += RunStart;
       On.RoR2.Stage.Start += StageStart;
       CharacterMaster.onStartGlobal += MasterChanges;
+      On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.OnEnter += BaseVacuumAttackStateOnEnter;
       // spawnEffect.transform.localScale = new Vector3(spawnEffect.transform.localScale.x + (spawnEffect.transform.localScale.x * 0.25f), spawnEffect.transform.localScale.y + (spawnEffect.transform.localScale.y * 0.25f), spawnEffect.transform.localScale.z + (spawnEffect.transform.localScale.z * 0.25f));
       // spinBeamVFX.transform.localScale = new Vector3(spinBeamVFX.transform.localScale.x / 2, spinBeamVFX.transform.localScale.y / 2, spinBeamVFX.transform.localScale.z / 2);
       voidRaid.blockOrbitalSkills = false;
@@ -80,6 +84,14 @@ namespace FathomlessVoidling
         3.3
         Suck.playbackRate
     **/
+
+    private void BaseVacuumAttackStateOnEnter(On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.orig_OnEnter orig, EntityStates.VoidRaidCrab.BaseVacuumAttackState self)
+    {
+      orig(self);
+      Transform donutCenter = VoidRaidGauntletController.instance.currentDonut.root.transform.Find("ReflectionProbe, Center");
+      if ((bool)donutCenter)
+        self.vacuumOrigin = donutCenter;
+    }
 
     private void AddContent()
     {
@@ -182,6 +194,24 @@ namespace FathomlessVoidling
       voidRaidCrabBody.baseAcceleration = 45;
       voidRaidCrabBody.baseArmor = 30;
       Logger.LogInfo("Finished Adjusting P2 Stats");
+
+      Logger.LogInfo("Adjusting P2 Skills");
+      SkillLocator skillLocator = voidRaidCrabPhase2.GetComponent<SkillLocator>();
+      SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
+      SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
+      SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
+      SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
+
+      primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
+      secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(VacuumEnter));
+      secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
+      secondaryDef.baseRechargeInterval = 40f;
+      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeDesolate));
+      utilityDef.baseRechargeInterval = 30f;
+      specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
+      specialDef.baseRechargeInterval = 20f;
+      specialDef.interruptPriority = EntityStates.InterruptPriority.Skill;
+      Logger.LogInfo("Finished Adjusting P2 Skills");
     }
     private void AdjustPhase3Stats()
     {
@@ -222,7 +252,7 @@ namespace FathomlessVoidling
 
     private void MasterChanges(CharacterMaster master)
     {
-      if (master.name == "MiniVoidRaidCrabMasterPhase1(Clone)")
+      if (master.name == "MiniVoidRaidCrabMasterPhase1(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase2(Clone)")
       {
         Logger.LogInfo("Editing P1 Special AISkillDriver");
         AISkillDriver aiSkillDriverPrimary = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Primary)).First<AISkillDriver>();

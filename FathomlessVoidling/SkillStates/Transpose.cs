@@ -1,18 +1,10 @@
 using RoR2;
 using RoR2.Navigation;
-using RoR2.Projectile;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.Networking;
-using UnityEngine.AddressableAssets;
 using EntityStates;
-using EntityStates.VagrantMonster.Weapon;
 using EntityStates.ImpBossMonster;
-using EntityStates.BrotherMonster;
-using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
-using EntityStates.BrotherMonster.Weapon;
-using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
@@ -52,6 +44,22 @@ namespace FathomlessVoidling
         origin = origin1,
         scale = 75
       }, false);
+      if (this.characterBody.name != "MiniVoidRaidCrabBodyPhase1(Clone)")
+      {
+        new BlastAttack()
+        {
+          radius = 75,
+          position = origin1,
+          attacker = this.gameObject,
+          teamIndex = TeamComponent.GetObjectTeam(this.gameObject),
+          crit = Util.CheckRoll(this.characterBody.crit, this.characterBody.master),
+          baseDamage = (this.damageStat * this.blastAttackDamageCoefficient),
+          falloffModel = BlastAttack.FalloffModel.Linear,
+          attackerFiltering = AttackerFiltering.NeverHitSelf,
+          damageType = this.characterBody.name == "MiniVoidRaidCrabBodyPhase3(Clone)" ? DamageType.VoidDeath : DamageType.Stun1s,
+          baseForce = this.blastAttackForce
+        }.Fire();
+      }
     }
 
     public override void FixedUpdate()
@@ -60,7 +68,6 @@ namespace FathomlessVoidling
       if ((double)this.stopwatch < (double)this.duration || !this.isAuthority)
         return;
       this.rigidbodyMotor.AddDisplacement(this.blinkDestination);
-      this.CreateBlinkEffect(this.characterBody.corePosition);
       this.outer.SetNextStateToMain();
     }
 
@@ -89,7 +96,7 @@ namespace FathomlessVoidling
     public override void OnExit()
     {
       int num = (int)Util.PlaySound(new BlinkState().endSoundString, this.gameObject);
-      this.CreateBlinkEffect(Util.GetCorePosition(this.gameObject));
+      this.CreateBlinkEffect(this.characterBody.corePosition);
       this.modelTransform = this.GetModelTransform();
       if ((bool)(Object)this.modelTransform && (bool)(Object)new BlinkState().destealthMaterial)
       {

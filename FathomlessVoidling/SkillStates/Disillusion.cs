@@ -29,6 +29,7 @@ namespace FathomlessVoidling
     public static float randomRadius;
     public static float force;
     public static float minimumDistanceBetweenBombs;
+    private GameObject deathBombPrefab;
     private float duration;
     private int bombsFired;
     private float fireTimer;
@@ -39,6 +40,18 @@ namespace FathomlessVoidling
     {
       base.OnEnter();
       this.duration = Disillusion.baseDuration / this.attackSpeedStat;
+      switch (this.characterBody.name)
+      {
+        case "MiniVoidRaidCrabBodyPhase1(Clone)":
+          deathBombPrefab = FathomlessVoidling.deathBomb;
+          break;
+        case "MiniVoidRaidCrabBodyPhase2(Clone)":
+          deathBombPrefab = FathomlessVoidling.deathBomb2;
+          break;
+        case "MiniVoidRaidCrabBodyPhase3(Clone)":
+          deathBombPrefab = FathomlessVoidling.deathBomb3;
+          break;
+      }
       this.StartAimMode(4f);
       if (!this.isAuthority)
         return;
