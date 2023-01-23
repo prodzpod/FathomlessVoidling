@@ -4,7 +4,7 @@
 	"website_url": "https://github.com/nuxlar/FathomlessVoidling",
 	"description": "The Augur of the Abyss emerges **WIP**",
 	"dependencies": [
-		"bbepis-BepInExPack-5.4.2102",
-		"tristanmcpherson-R2API-4.4.1"
+		"RiskofThunder-R2API_ContentManagement-1.0.1",
+		"RiskofThunder-R2API_Prefab-1.0.1"
 	]
 }

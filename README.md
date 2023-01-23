@@ -1,45 +1,41 @@
 # Fathomless Voidling
 
-A Work In Progress of a Voidling rework mod, releasing it early with the intent on getting feedback/bugs before a 1.0 release. Report bugs in the github's issues tab and reach out on Discord (in either the Official RoR2 Discord / the Modding Discord) with any feedback. Currently only Phase 1 is reworked but the stats of the other phases have been reduced to Mithrix's level so you can continue the whole "fight". Stats are currently Mithrix level so Voidling is an actual alt final boss and not a DPS check, will have stat configs on full release. There's a Deep Void portal on soup island (moon cauldrons) that will take you directly to Voidling if you don't want to fight Mithrix or spend coins.
+A Work In Progress of a Voidling rework mod. Stats are currently Mithrix level so Voidling is an actual alt final boss and not a DPS check, will have stat configs on full release. There's a Deep Void portal on soup island (moon cauldrons) that will take you directly to Voidling if you don't want to fight Mithrix or spend coins.
 
 Phase info:
 
-- Phase 1 Buffed Reaver (Death Bubbles).
-- Phase 2 Buffed Devastator (Mines?), Upgraded/Deadlier abilities.
-- Phase 3 Buffed Jailer (Oughehe), Upgraded/Deadlier abilities.
-
-Ability info (P1):
+Phase 1:
 
 - Primary: Disillusion
-  - Fires waves of void missiles and summons slow tracking death bombs that explode with bomblets
-- Secondary: Crush
-  - Launches a barrage of void meteors
+  - Fires waves of void missiles and summons large portal bombs that nullify on hit
+- Secondary: Singularity
+  - Creates a black hole in the center of the arena
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
-- Special: Desolate 
-  - Launches an inaccurate barrage of lasers that rend whatever they touch
+- Special: Rend
+  - Launches an inaccurate barrage of lasers
 
-Ability info (P2):
+Phase 2:
 
 - Primary: Disill??usion
   - Fires waves of void missiles and summons faster tracking death bombs
-- Secondary: C?rush
-  - Creates a black hole in the center of the arena
+- Secondary: Crush
+  - Pulls meteors from the surrounding area and launches them at the player
 - Utility: Transp?ose
   - Slips deeper into the void, damaging, reappears near the target
-- Special: Des?olate?
-  - Random beams sprout from the ground
+- Special: Desolate
+  - Void beams sprout from the ground
 
-Ability info (P3):
+Phase 3:
 
 - Primary: ?Disill??usio?n
-  - Fires waves of void missiles and summons faster tracking death bombs that move
-- Secondary: C?rush?
-  - Launches a barrage of void meteors
+  - Fires waves of void missiles and summons tracking death bombs (void jailer death bomb)
+- Secondary: Crush
+  - Pulls meteors from the surrounding area and launches them at the player
 - Utility: Tr?ansp??ose
   - Slips deeper into the void, death, reappears near the target
-- Special: D?es?olate? 
-  - Creates a black hole in the center of the arena? Planetary Devastation
+- Special: Planetary Devastation/Reap
+  - Creates a Planet in the center of the arena that launches deadly lassers
 
 ## Plans
 

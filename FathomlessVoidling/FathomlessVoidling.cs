@@ -6,7 +6,6 @@ using RoR2.CharacterAI;
 using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
 using R2API;
-using R2API.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +16,8 @@ using UnityEngine.AddressableAssets;
 namespace FathomlessVoidling
 {
   [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.6.3")]
-  [BepInDependency("com.bepis.r2api")]
-  [R2APISubmoduleDependency(new string[]
-    {
-        "PrefabAPI",
-        "ContentAddition"
-    })]
+  [BepInDependency("com.bepis.r2api.prefab", BepInDependency.DependencyFlags.HardDependency)]
+  [BepInDependency("com.bepis.r2api.content_management", BepInDependency.DependencyFlags.HardDependency)]
 
   public class FathomlessVoidling : BaseUnityPlugin
   {
@@ -33,18 +28,12 @@ namespace FathomlessVoidling
     public static GameObject meteor = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulder.prefab").WaitForCompletion(), "VoidMeteor");
     private static GameObject meteorGhost = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Grandparent/GrandparentBoulderGhost.prefab").WaitForCompletion(), "VoidMeteorGhost");
     public static GameObject portal = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabSpawnEffect.prefab").WaitForCompletion();
-    public static GameObject deathBomb3 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidJailer/VoidJailerDeathBombProjectile.prefab").WaitForCompletion();
-
-    public static GameObject deathBomb2 = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierDeathBombProjectile.prefab").WaitForCompletion();
-    public static GameObject deathBomb = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombProjectile.prefab").WaitForCompletion();
-    public static GameObject deathBombGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombGhost.prefab").WaitForCompletion();
-    public static GameObject deathBombExplosion = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
-    public static GameObject deathBombletExplosion = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombletsExplosion.prefab").WaitForCompletion();
-    public static GameObject deathBombletGhost = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombletsGhost.prefab").WaitForCompletion();
-    public static GameObject deathBomblet = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombletsProjectile.prefab").WaitForCompletion();
+    public static GameObject bombPrefab3 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidJailer/VoidJailerDeathBombProjectile.prefab").WaitForCompletion();
+    public static GameObject bombPrefab2 = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierDeathBombProjectile.prefab").WaitForCompletion();
+    public static GameObject bombPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierPreBombProjectile.prefab").WaitForCompletion(), "BigPortalBomb");
+    public static GameObject bombGhostPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierPreBombGhost.prefab").WaitForCompletion(), "BigPortalBombGhost");
     private static Material boulderMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Grandparent/matGrandparentBoulderProjectile.mat").WaitForCompletion();
     private static Material voidAffixMat = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/EliteVoid/matEliteVoidOverlay.mat").WaitForCompletion();
-    public static GameObject barnacleBullet = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidBarnacle/VoidBarnacleBullet.prefab").WaitForCompletion();
     public static GameObject deathBombPre = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathPreExplosion.prefab").WaitForCompletion();
     public static GameObject deathBombPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
     public static GameObject spawnEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpawnEffect.prefab").WaitForCompletion();
@@ -58,8 +47,6 @@ namespace FathomlessVoidling
       On.RoR2.Stage.Start += StageStart;
       CharacterMaster.onStartGlobal += MasterChanges;
       On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.OnEnter += BaseVacuumAttackStateOnEnter;
-      // spawnEffect.transform.localScale = new Vector3(spawnEffect.transform.localScale.x + (spawnEffect.transform.localScale.x * 0.25f), spawnEffect.transform.localScale.y + (spawnEffect.transform.localScale.y * 0.25f), spawnEffect.transform.localScale.z + (spawnEffect.transform.localScale.z * 0.25f));
-      // spinBeamVFX.transform.localScale = new Vector3(spinBeamVFX.transform.localScale.x / 2, spinBeamVFX.transform.localScale.y / 2, spinBeamVFX.transform.localScale.z / 2);
       voidRaid.blockOrbitalSkills = false;
       CreateSpecial();
       AddContent();
@@ -88,9 +75,9 @@ namespace FathomlessVoidling
     private void BaseVacuumAttackStateOnEnter(On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.orig_OnEnter orig, EntityStates.VoidRaidCrab.BaseVacuumAttackState self)
     {
       orig(self);
-      Transform donutCenter = VoidRaidGauntletController.instance.currentDonut.root.transform.Find("ReflectionProbe, Center");
+      GameObject donutCenter = GameObject.Find("ReflectionProbe, Center");
       if ((bool)donutCenter)
-        self.vacuumOrigin = donutCenter;
+        self.vacuumOrigin = donutCenter.transform;
     }
 
     private void AddContent()
@@ -99,6 +86,10 @@ namespace FathomlessVoidling
       meteorController.ghost = meteorGhost.GetComponent<ProjectileGhostController>();
       meteorController.ghostPrefab = meteorGhost;
       ContentAddition.AddProjectile(meteor);
+      bombGhostPrefab.transform.localScale = new Vector3(10, 10, 10);
+      bombPrefab.transform.localScale = new Vector3(5, 5, 5);
+      bombPrefab.GetComponent<ProjectileController>().ghostPrefab = bombGhostPrefab;
+      ContentAddition.AddProjectile(bombPrefab);
     }
 
     private void SetupProjectiles()
@@ -133,7 +124,7 @@ namespace FathomlessVoidling
       SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
 
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
-      secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeCrush));
+      secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(BaseVacuumAttackState));
       secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       secondaryDef.baseRechargeInterval = 40f;
       utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeDesolate));
@@ -159,7 +150,7 @@ namespace FathomlessVoidling
       SkillDef transpose = ScriptableObject.CreateInstance<SkillDef>();
       transpose.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
       transpose.skillNameToken = "Transpose";
-      transpose.activationStateMachineName = "Weapon";
+      transpose.activationStateMachineName = "Body";
       transpose.baseMaxStock = 1;
       transpose.baseRechargeInterval = 20f;
       transpose.beginSkillCooldownOnSkillEnd = true;
@@ -173,11 +164,7 @@ namespace FathomlessVoidling
       transpose.requiredStock = 1;
       transpose.stockToConsume = 1;
 
-      newFamily.variants[0] = new SkillFamily.Variant
-      {
-        skillDef = transpose,
-        viewableNode = new ViewablesCatalog.Node(transpose.skillNameToken, false, null)
-      };
+      newFamily.variants[0] = new SkillFamily.Variant { skillDef = transpose };
 
       ContentAddition.AddSkillFamily(newFamily);
       skillLocator.special = skill;
@@ -266,7 +253,7 @@ namespace FathomlessVoidling
         aiSkillDriverSpecial.maxTargetHealthFraction = aiSkillDriverPrimary.maxTargetHealthFraction;
         aiSkillDriverSpecial.minTargetHealthFraction = aiSkillDriverPrimary.minTargetHealthFraction;
         aiSkillDriverSpecial.requireSkillReady = aiSkillDriverPrimary.requireSkillReady;
-        aiSkillDriverSpecial.maxDistance = 1000;
+        aiSkillDriverSpecial.maxDistance = float.PositiveInfinity;
         Logger.LogInfo("Finished Editing P1 Special AISkillDriver");
       }
       if (master.name == "MiniVoidRaidCrabMasterPhase1(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase2(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase3(Clone)")
