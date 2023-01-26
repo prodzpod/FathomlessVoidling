@@ -2,7 +2,7 @@
 
 A Work In Progress of a Voidling rework mod. Stats are currently Mithrix level so Voidling is an actual alt final boss and not a DPS check, will have stat configs on full release. There's a Deep Void portal on soup island (moon cauldrons) that will take you directly to Voidling if you don't want to fight Mithrix or spend coins.
 
-Phase info:
+Phase info (Final Version not current):
 
 Phase 1:
 
@@ -19,12 +19,12 @@ Phase 2:
 
 - Primary: Disill??usion
   - Fires waves of void missiles and summons 3 faster predictive death bombs
-- Secondary: Crush
-  - Pulls meteors from the surrounding area and launches them at the player
+- Secondary: ???
+  - ???
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
-- Special: Desolate
-  - Void beams sprout from the ground
+- Special: ???
+  - ???
 
 Phase 3:
 
@@ -34,22 +34,29 @@ Phase 3:
   - Pulls meteors from the surrounding area and launches them at the player
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
-- Special: Planetary Devastation/Reap
-  - Creates a Planet in the center of the arena that launches deadly lassers
+- Special: ???
+  - ???
 
 ## Plans
 
-- Complete Phase 3 Kit (0.8.0)
-- Add config for stats/skills (0.9.0)
-- Release (bug fixes, tweaks, polish) (1.0.0)
+- Adding stat configs
+- Finishing 2-3 more abilities
+- Polish
+- Making Locus a Moon alternative (portal on stage 5, adding cauldrons, removing pillar void fog)
 
 ## Changelog
 
-**0.7.0**
+**0.8.0**
 
-- Completes Phase 2 kit
+- Rewrote a lot of the code (fixed console spam, makes sure things work properly, better organized, etc...)
+- R2API updates
 - Slightly buffs HP (1100 -> 1250 base | 325 -> 350 level)
 - Slows down meteor speed (150 -> 100)
+- Completes Singularity ability
+- Updates Disillusion to change death bombs each phase and actually be predictive
+- Moves Crush to Phase 2/3
+- Adds more missile waves to Disillusion
+- README Updates
 
 **0.6.2**
 

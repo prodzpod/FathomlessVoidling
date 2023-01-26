@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 using EntityStates;
 using EntityStates.ImpBossMonster;
-using EntityStates.VoidRaidCrab.Weapon;
 
 namespace FathomlessVoidling
 {
@@ -44,22 +43,6 @@ namespace FathomlessVoidling
         origin = origin1,
         scale = 75
       }, false);
-      if (this.characterBody.name != "MiniVoidRaidCrabBodyPhase1(Clone)")
-      {
-        new BlastAttack()
-        {
-          radius = 75,
-          position = origin1,
-          attacker = this.gameObject,
-          teamIndex = TeamComponent.GetObjectTeam(this.gameObject),
-          crit = Util.CheckRoll(this.characterBody.crit, this.characterBody.master),
-          baseDamage = (this.damageStat * this.blastAttackDamageCoefficient),
-          falloffModel = BlastAttack.FalloffModel.Linear,
-          attackerFiltering = AttackerFiltering.NeverHitSelf,
-          damageType = this.characterBody.name == "MiniVoidRaidCrabBodyPhase3(Clone)" ? DamageType.VoidDeath : DamageType.Stun1s,
-          baseForce = this.blastAttackForce
-        }.Fire();
-      }
     }
 
     public override void FixedUpdate()

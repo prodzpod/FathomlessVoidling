@@ -1,27 +1,15 @@
 using RoR2;
 using System.Linq;
-using RoR2.Navigation;
 using RoR2.Projectile;
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.AddressableAssets;
 using EntityStates;
-using EntityStates.TitanMonster;
-using EntityStates.VagrantMonster.Weapon;
 using EntityStates.NullifierMonster;
-using EntityStates.BrotherMonster;
-using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
-using EntityStates.BrotherMonster.Weapon;
-using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
   public class Disillusion : BaseState
   {
-    //public static GameObject portalBombProjectileEffect;
-    //public static GameObject muzzleflashEffectPrefab;
-    //public static string muzzleString;
     public static int portalBombCount;
     public static float baseDuration = 4f;
     public static float damageCoefficient;
