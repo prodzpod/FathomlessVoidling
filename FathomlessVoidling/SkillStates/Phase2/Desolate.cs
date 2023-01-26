@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
-  public class Desolate2 : BaseState
+  public class Desolate : BaseState
   {
     private float stopwatch;
     private float missileStopwatch;

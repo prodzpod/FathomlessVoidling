@@ -120,7 +120,7 @@ namespace FathomlessVoidling
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(BaseVacuumAttackState));
       secondaryDef.baseRechargeInterval = 40f;
-      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeDesolate));
+      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeRend));
       utilityDef.baseRechargeInterval = 30f;
       specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
 
@@ -187,7 +187,7 @@ namespace FathomlessVoidling
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(VacuumEnter));
       secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       secondaryDef.baseRechargeInterval = 40f;
-      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeDesolate));
+      utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeRend));
       utilityDef.baseRechargeInterval = 30f;
       specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
       specialDef.baseRechargeInterval = 20f;

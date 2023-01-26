@@ -1,19 +1,13 @@
 using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
 using EntityStates;
-using EntityStates.VagrantMonster.Weapon;
-using EntityStates.BrotherMonster;
-using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
-using EntityStates.BrotherMonster.Weapon;
-using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
-  public class Desolate : BaseState
+  public class Rend : BaseState
   {
     private float stopwatch;
     private float missileStopwatch;
@@ -45,11 +39,11 @@ namespace FathomlessVoidling
       base.OnEnter();
       this.missileStopwatch -= missileSpawnDelay;
       this.duration = this.baseDuration / this.attackSpeedStat;
-      this.muzzleTransform = this.FindModelChild(Desolate.muzzleName);
+      this.muzzleTransform = this.FindModelChild(Rend.muzzleName);
     }
     private void FireBlob()
     {
-      this.PlayAnimation(Desolate.animationLayerName, Desolate.animationStateName, Desolate.animationPlaybackRateParam, this.duration);
+      this.PlayAnimation(Rend.animationLayerName, Rend.animationStateName, Rend.animationPlaybackRateParam, this.duration);
       int num2 = (int)Util.PlaySound(new EntityStates.VoidRaidCrab.Weapon.FireMultiBeamSmall().enterSoundString, this.gameObject);
       Ray beamRay;
       Vector3 beamEndPos;
@@ -60,12 +54,12 @@ namespace FathomlessVoidling
         attacker = this.gameObject,
         inflictor = this.gameObject,
         teamIndex = TeamComponent.GetObjectTeam(this.gameObject),
-        baseDamage = this.damageStat * (Desolate.blastDamageCoefficient / 2),
-        baseForce = Desolate.blastForceMagnitude,
+        baseDamage = this.damageStat * (Rend.blastDamageCoefficient / 2),
+        baseForce = Rend.blastForceMagnitude,
         position = beamEndPos,
-        radius = Desolate.blastRadius,
+        radius = Rend.blastRadius,
         falloffModel = BlastAttack.FalloffModel.SweetSpot,
-        bonusForce = Desolate.blastBonusForce,
+        bonusForce = Rend.blastBonusForce,
         damageType = DamageType.Generic
       }.Fire();
       Transform modelTransform = this.GetModelTransform();
@@ -75,17 +69,17 @@ namespace FathomlessVoidling
         if ((bool)(Object)component)
         {
           int childIndex = component.FindChildIndex(BaseMultiBeamState.muzzleName);
-          if ((bool)(Object)Desolate.tracerEffectPrefab)
+          if ((bool)(Object)Rend.tracerEffectPrefab)
           {
             EffectData effectData = new EffectData()
             {
               origin = beamEndPos,
               start = beamRay.origin,
-              scale = Desolate.blastRadius
+              scale = Rend.blastRadius
             };
             effectData.SetChildLocatorTransformReference(this.gameObject, childIndex);
-            EffectManager.SpawnEffect(Desolate.tracerEffectPrefab, effectData, true);
-            EffectManager.SpawnEffect(Desolate.explosionEffectPrefab, effectData, true);
+            EffectManager.SpawnEffect(Rend.tracerEffectPrefab, effectData, true);
+            EffectManager.SpawnEffect(Rend.explosionEffectPrefab, effectData, true);
           }
         }
       }

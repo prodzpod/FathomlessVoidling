@@ -7,33 +7,33 @@ Phase info:
 Phase 1:
 
 - Primary: Disillusion
-  - Fires waves of void missiles and summons large portal bombs that nullify on hit
+  - Fires waves of void missiles and summons 3 large predictive death bombs
 - Secondary: Singularity
-  - Creates a black hole in the center of the arena
+  - Creates a black hole in the center of the donut
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
 - Special: Rend
-  - Launches an inaccurate barrage of lasers
+  - Fires an inaccurate barrage of lasers
 
 Phase 2:
 
 - Primary: Disill??usion
-  - Fires waves of void missiles and summons faster tracking death bombs
+  - Fires waves of void missiles and summons 3 faster predictive death bombs
 - Secondary: Crush
   - Pulls meteors from the surrounding area and launches them at the player
-- Utility: Transp?ose
-  - Slips deeper into the void, damaging, reappears near the target
+- Utility: Transpose
+  - Slips deeper into the void, reappears near the target
 - Special: Desolate
   - Void beams sprout from the ground
 
 Phase 3:
 
 - Primary: ?Disill??usio?n
-  - Fires waves of void missiles and summons tracking death bombs (void jailer death bomb)
+  - Fires waves of void missiles and summons 3 tracking death bombs
 - Secondary: Crush
   - Pulls meteors from the surrounding area and launches them at the player
-- Utility: Tr?ansp??ose
-  - Slips deeper into the void, death, reappears near the target
+- Utility: Transpose
+  - Slips deeper into the void, reappears near the target
 - Special: Planetary Devastation/Reap
   - Creates a Planet in the center of the arena that launches deadly lassers
 

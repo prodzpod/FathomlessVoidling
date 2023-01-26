@@ -1,19 +1,11 @@
 using RoR2;
-using RoR2.Projectile;
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.AddressableAssets;
 using EntityStates;
-using EntityStates.VagrantMonster.Weapon;
-using EntityStates.BrotherMonster;
-using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
-using EntityStates.BrotherMonster.Weapon;
-using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
-  public class ChargeDesolate : BaseMultiBeamState
+  public class ChargeRend : BaseMultiBeamState
   {
     [SerializeField]
     public float baseDuration = new ChargeMultiBeam().baseDuration;
@@ -82,7 +74,7 @@ namespace FathomlessVoidling
       base.FixedUpdate();
       if (!this.isAuthority || (double)this.fixedAge < (double)this.duration)
         return;
-      this.outer.SetNextState((EntityState)new Desolate());
+      this.outer.SetNextState((EntityState)new Rend());
     }
 
     public override void Update()
