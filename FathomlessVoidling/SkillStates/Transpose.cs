@@ -37,7 +37,7 @@ namespace FathomlessVoidling
     private new void CreateBlinkEffect(Vector3 origin1)
     {
       int num = (int)Util.PlaySound(new EntityStates.VoidRaidCrab.Weapon.FireMultiBeamFinale().enterSoundString, this.gameObject);
-      EffectManager.SimpleMuzzleFlash(FathomlessVoidling.deathBombPre, this.gameObject, new FireMissiles().muzzleName, false);
+      // EffectManager.SimpleMuzzleFlash(FathomlessVoidling.deathBombPre, this.gameObject, new FireMissiles().muzzleName, false);
       EffectManager.SpawnEffect(FathomlessVoidling.deathBombPrefab, new EffectData()
       {
         rotation = Util.QuaternionSafeLookRotation(this.blinkDestination - this.blinkStart),

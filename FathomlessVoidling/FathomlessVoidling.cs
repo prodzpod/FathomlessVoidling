@@ -30,11 +30,9 @@ namespace FathomlessVoidling
     public static GameObject portal = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabSpawnEffect.prefab").WaitForCompletion();
     public static GameObject bombPrefab3 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidJailer/VoidJailerDeathBombProjectile.prefab").WaitForCompletion();
     public static GameObject bombPrefab2 = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierDeathBombProjectile.prefab").WaitForCompletion();
-    public static GameObject bombPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierPreBombProjectile.prefab").WaitForCompletion(), "BigPortalBomb");
-    public static GameObject bombGhostPrefab = PrefabAPI.InstantiateClone(Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Nullifier/NullifierPreBombGhost.prefab").WaitForCompletion(), "BigPortalBombGhost");
+    public static GameObject bombPrefab1 = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombProjectile.prefab").WaitForCompletion();
     private static Material boulderMat = Addressables.LoadAssetAsync<Material>("RoR2/Base/Grandparent/matGrandparentBoulderProjectile.mat").WaitForCompletion();
     private static Material voidAffixMat = Addressables.LoadAssetAsync<Material>("RoR2/DLC1/EliteVoid/matEliteVoidOverlay.mat").WaitForCompletion();
-    public static GameObject deathBombPre = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathPreExplosion.prefab").WaitForCompletion();
     public static GameObject deathBombPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
     public static GameObject spawnEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpawnEffect.prefab").WaitForCompletion();
     public static GameObject spinBeamVFX = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpinBeamVFX.prefab").WaitForCompletion();
@@ -86,10 +84,6 @@ namespace FathomlessVoidling
       meteorController.ghost = meteorGhost.GetComponent<ProjectileGhostController>();
       meteorController.ghostPrefab = meteorGhost;
       ContentAddition.AddProjectile(meteor);
-      bombGhostPrefab.transform.localScale = new Vector3(10, 10, 10);
-      bombPrefab.transform.localScale = new Vector3(5, 5, 5);
-      bombPrefab.GetComponent<ProjectileController>().ghostPrefab = bombGhostPrefab;
-      ContentAddition.AddProjectile(bombPrefab);
     }
 
     private void SetupProjectiles()
@@ -125,7 +119,6 @@ namespace FathomlessVoidling
 
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(BaseVacuumAttackState));
-      secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
       secondaryDef.baseRechargeInterval = 40f;
       utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeDesolate));
       utilityDef.baseRechargeInterval = 30f;
@@ -174,6 +167,7 @@ namespace FathomlessVoidling
     {
       Logger.LogInfo("Adjusting P2 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase2.GetComponent<CharacterBody>();
+      voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
       voidRaidCrabBody.baseMaxHealth = 1250;
       voidRaidCrabBody.levelMaxHealth = 350;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
@@ -204,6 +198,7 @@ namespace FathomlessVoidling
     {
       Logger.LogInfo("Adjusting P3 Stats");
       CharacterBody voidRaidCrabBody = voidRaidCrabPhase3.GetComponent<CharacterBody>();
+      voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
       voidRaidCrabBody.baseMaxHealth = 1250;
       voidRaidCrabBody.levelMaxHealth = 350;
       voidRaidCrabBody.baseAttackSpeed = 1.25f;
@@ -243,7 +238,10 @@ namespace FathomlessVoidling
       {
         Logger.LogInfo("Editing P1 Special AISkillDriver");
         AISkillDriver aiSkillDriverPrimary = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Primary)).First<AISkillDriver>();
+        AISkillDriver aiSkillDriverSecondary = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Secondary)).First<AISkillDriver>();
         AISkillDriver aiSkillDriverSpecial = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Special)).First<AISkillDriver>();
+        aiSkillDriverSecondary.movementType = AISkillDriver.MovementType.Stop;
+        aiSkillDriverSecondary.requiredSkill = null;
         aiSkillDriverSpecial.requiredSkill = voidRaidCrabPhase1.GetComponent<SkillLocator>().special.skillFamily.variants[0].skillDef;
         aiSkillDriverSpecial.activationRequiresAimConfirmation = aiSkillDriverPrimary.activationRequiresAimConfirmation;
         aiSkillDriverSpecial.activationRequiresAimTargetLoS = aiSkillDriverPrimary.activationRequiresAimTargetLoS;

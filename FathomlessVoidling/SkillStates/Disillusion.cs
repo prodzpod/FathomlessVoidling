@@ -23,7 +23,7 @@ namespace FathomlessVoidling
     //public static GameObject muzzleflashEffectPrefab;
     //public static string muzzleString;
     public static int portalBombCount;
-    public static float baseDuration = 2f;
+    public static float baseDuration = 4f;
     public static float damageCoefficient;
     public static float procCoefficient;
     public static float randomRadius;
@@ -33,10 +33,11 @@ namespace FathomlessVoidling
     private float duration;
     private int bombsFired;
     private float fireTimer;
+    private float stopwatch;
     private float fireInterval;
     private Vector3 lastBombPosition;
-    private Predictor predictor;
     private Vector3 predictedTargetPosition;
+    private Predictor predictor;
 
     public override void OnEnter()
     {
@@ -45,7 +46,7 @@ namespace FathomlessVoidling
       switch (this.characterBody.name)
       {
         case "MiniVoidRaidCrabBodyPhase1(Clone)":
-          bombPrefab = FathomlessVoidling.bombPrefab;
+          bombPrefab = FathomlessVoidling.bombPrefab1;
           break;
         case "MiniVoidRaidCrabBodyPhase2(Clone)":
           bombPrefab = FathomlessVoidling.bombPrefab2;
@@ -54,11 +55,9 @@ namespace FathomlessVoidling
           bombPrefab = FathomlessVoidling.bombPrefab3;
           break;
       }
-      this.StartAimMode(4f);
-      if (!this.isAuthority)
-        return;
-      this.fireInterval = this.duration / (float)FirePortalBomb.portalBombCount;
+      this.fireInterval = this.duration / 5;
       this.fireTimer = 0.0f;
+      this.stopwatch = 0.0f;
       BullseyeSearch bullseyeSearch = new BullseyeSearch();
       bullseyeSearch.teamMaskFilter = TeamMask.allButNeutral;
       if ((bool)(Object)this.teamComponent)
@@ -74,7 +73,7 @@ namespace FathomlessVoidling
       HurtBox hurtBox = bullseyeSearch.GetResults().FirstOrDefault<HurtBox>();
       if (!(bool)(Object)hurtBox)
         return;
-      this.predictor = new Disillusion.Predictor(this.transform);
+      this.predictor = new Predictor(this.transform);
       this.predictor.SetTargetTransform(hurtBox.transform);
     }
 
@@ -86,7 +85,8 @@ namespace FathomlessVoidling
         position = point,
         rotation = Quaternion.identity,
         owner = this.gameObject,
-        damage = new EntityStates.VoidMegaCrab.DeathState().damageStat,
+        damage = 0,
+        force = 0,
         crit = this.characterBody.RollCrit()
       });
     }
@@ -94,8 +94,17 @@ namespace FathomlessVoidling
     public override void FixedUpdate()
     {
       base.FixedUpdate();
-      if (!this.isAuthority)
-        return;
+      // Predictive Death Bombs
+      this.stopwatch += Time.fixedDeltaTime;
+      predictor.Update();
+      if ((double)this.stopwatch <= (double)1f)
+        predictor.GetPredictedTargetPosition(1f, out predictedTargetPosition);
+      else
+      {
+        this.stopwatch = 0f;
+        FireBomb(predictedTargetPosition);
+      }
+      // Missile Firing
       this.fireTimer -= Time.fixedDeltaTime;
       if ((double)this.fireTimer <= 0.0)
       {
@@ -116,11 +125,6 @@ namespace FathomlessVoidling
           fireProjectileInfo.rotation = quaternion * new FireMissiles().GetRandomRollPitch();
           fireProjectileInfo.crit = Util.CheckRoll(this.critStat, this.characterBody.master);
           ProjectileManager.instance.FireProjectile(fireProjectileInfo);
-        }
-        if (this.predictor != null)
-        {
-          this.predictor.GetPredictedTargetPosition(0.75f, out predictedTargetPosition);
-          this.FireBomb(predictedTargetPosition);
         }
         EffectManager.SimpleMuzzleFlash(FirePortalBomb.muzzleflashEffectPrefab, this.gameObject, new FireMissiles().muzzleName, true);
         ++this.bombsFired;
