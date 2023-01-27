@@ -2,8 +2,9 @@
 	"name": "FathomlessVoidling",
 	"version_number": "0.8.0",
 	"website_url": "https://github.com/nuxlar/FathomlessVoidling",
-	"description": "The Augur of the Abyss emerges **WIP**",
+	"description": "Improved Voidling fight with some extras. Configurable",
 	"dependencies": [
+		"Rune580-Risk_Of_Options-2.5.3",
 		"RiskofThunder-R2API_ContentManagement-1.0.1",
 		"RiskofThunder-R2API_Prefab-1.0.1"
 	]

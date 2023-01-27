@@ -40,6 +40,7 @@ namespace FathomlessVoidling
 
     public void Awake()
     {
+      ModConfig.InitConfig(Config);
       On.RoR2.Run.Start += RunStart;
       On.RoR2.Stage.Start += StageStart;
       CharacterMaster.onStartGlobal += MasterChanges;
@@ -52,13 +53,6 @@ namespace FathomlessVoidling
     }
     /** 
         Base Stats
-        accel 20
-        armor 20
-        attkspd 1
-        dmg 15
-        HP 2000
-        movespd 45
-        jump 0
         projectile rotation 360
         -158.7 -152.8 -389
         Body
@@ -83,7 +77,7 @@ namespace FathomlessVoidling
     {
       ContentAddition.AddEntityState<ChargeRend>(out _);
       ContentAddition.AddEntityState<Rend>(out _);
-      ContentAddition.AddEntityState<Desolate>(out _);
+      ContentAddition.AddEntityState<Reap>(out _);
       ContentAddition.AddEntityState<ChargeCrush>(out _);
       ContentAddition.AddEntityState<Crush>(out _);
       ContentAddition.AddEntityState<Disillusion>(out _);
@@ -104,36 +98,72 @@ namespace FathomlessVoidling
       Logger.LogInfo("Finished Setting Up Projectiles");
     }
 
-    private void AdjustPhase1Stats()
+    private void AdjustPhase1Skills(CharacterBody body)
     {
-      Logger.LogInfo("Adjusting P1 Stats");
-      CharacterBody voidRaidCrabBody = voidRaidCrabPhase1.GetComponent<CharacterBody>();
-      voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
-      voidRaidCrabBody.baseMaxHealth = 1250;
-      voidRaidCrabBody.levelMaxHealth = 350;
-      voidRaidCrabBody.baseAttackSpeed = 1.25f;
-      voidRaidCrabBody.baseMoveSpeed = 67.5f;
-      voidRaidCrabBody.baseAcceleration = 30;
-      voidRaidCrabBody.baseArmor = 30;
-      Logger.LogInfo("Finished Adjusting P1 Stats");
-
       Logger.LogInfo("Adjusting P1 Skills");
-      SkillLocator skillLocator = voidRaidCrabPhase1.GetComponent<SkillLocator>();
+      SkillLocator skillLocator = body.skillLocator;
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
-      SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
 
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
+      primaryDef.baseRechargeInterval = ModConfig.primCD.Value;
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(VacuumEnter));
-      secondaryDef.baseRechargeInterval = 40f;
+      secondaryDef.baseRechargeInterval = ModConfig.secCD.Value;
       utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeRend));
-      utilityDef.baseRechargeInterval = 30f;
-      specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
+      utilityDef.baseRechargeInterval = ModConfig.specCD.Value;
 
       ProjectileSteerTowardTarget voidRaidMissiles = new FireMissiles().projectilePrefab.GetComponent<ProjectileSteerTowardTarget>();
       voidRaidMissiles.rotationSpeed = 180;
       Logger.LogInfo("Finished Adjusting P1 Skills");
+    }
+
+    private void AdjustPhase1Stats()
+    {
+      Logger.LogInfo("Adjusting P1 Stats");
+      CharacterBody body = voidRaidCrabPhase1.GetComponent<CharacterBody>();
+      body.subtitleNameToken = "Augur of the Abyss";
+      body.baseMaxHealth = ModConfig.baseHealth.Value;
+      body.levelMaxHealth = ModConfig.levelHealth.Value;
+      body.baseDamage = ModConfig.baseDamage.Value;
+      body.levelDamage = ModConfig.levelDamage.Value;
+      body.baseAttackSpeed = ModConfig.baseAtkSpd.Value;
+      body.baseMoveSpeed = ModConfig.baseSpd.Value;
+      body.baseAcceleration = ModConfig.acceleration.Value;
+      body.baseArmor = ModConfig.baseArmor.Value;
+      Logger.LogInfo("Finished Adjusting P1 Stats");
+    }
+
+    private void AdjustPhase2Stats()
+    {
+      Logger.LogInfo("Adjusting P2 Stats");
+      CharacterBody body = voidRaidCrabPhase2.GetComponent<CharacterBody>();
+      body.subtitleNameToken = "Augur of the Abyss";
+      body.baseMaxHealth = ModConfig.baseHealth.Value;
+      body.levelMaxHealth = ModConfig.levelHealth.Value;
+      body.baseDamage = ModConfig.baseDamage.Value;
+      body.levelDamage = ModConfig.levelDamage.Value;
+      body.baseAttackSpeed = ModConfig.baseAtkSpd.Value;
+      body.baseMoveSpeed = ModConfig.baseSpd.Value;
+      body.baseAcceleration = ModConfig.acceleration.Value;
+      body.baseArmor = ModConfig.baseArmor.Value;
+      Logger.LogInfo("Finished Adjusting P2 Stats");
+    }
+
+    private void AdjustPhase3Stats()
+    {
+      Logger.LogInfo("Adjusting P3 Stats");
+      CharacterBody body = voidRaidCrabPhase3.GetComponent<CharacterBody>();
+      body.subtitleNameToken = "Augur of the Abyss";
+      body.baseMaxHealth = ModConfig.baseHealth.Value;
+      body.levelMaxHealth = ModConfig.levelHealth.Value;
+      body.baseDamage = ModConfig.baseDamage.Value;
+      body.levelDamage = ModConfig.levelDamage.Value;
+      body.baseAttackSpeed = ModConfig.baseAtkSpd.Value;
+      body.baseMoveSpeed = ModConfig.baseSpd.Value;
+      body.baseAcceleration = ModConfig.acceleration.Value;
+      body.baseArmor = ModConfig.baseArmor.Value;
+      Logger.LogInfo("Finished Adjusting P3 Stats");
     }
 
     private void CreateSpecial()
@@ -152,7 +182,7 @@ namespace FathomlessVoidling
       transpose.skillNameToken = "Transpose";
       transpose.activationStateMachineName = "Body";
       transpose.baseMaxStock = 1;
-      transpose.baseRechargeInterval = 20f;
+      transpose.baseRechargeInterval = ModConfig.utilCD.Value;
       transpose.beginSkillCooldownOnSkillEnd = true;
       transpose.canceledFromSprinting = false;
       transpose.cancelSprintingOnActivation = false;
@@ -170,65 +200,45 @@ namespace FathomlessVoidling
       skillLocator.special = skill;
       Logger.LogInfo("Finished Creating Special");
     }
-    private void AdjustPhase2Stats()
+    private void AdjustPhase2Skills(CharacterBody body)
     {
-      Logger.LogInfo("Adjusting P2 Stats");
-      CharacterBody voidRaidCrabBody = voidRaidCrabPhase2.GetComponent<CharacterBody>();
-      voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
-      voidRaidCrabBody.baseMaxHealth = 1250;
-      voidRaidCrabBody.levelMaxHealth = 350;
-      voidRaidCrabBody.baseAttackSpeed = 1.25f;
-      voidRaidCrabBody.baseMoveSpeed = 90;
-      voidRaidCrabBody.baseAcceleration = 45;
-      voidRaidCrabBody.baseArmor = 30;
-      Logger.LogInfo("Finished Adjusting P2 Stats");
-
       Logger.LogInfo("Adjusting P2 Skills");
-      SkillLocator skillLocator = voidRaidCrabPhase2.GetComponent<SkillLocator>();
+      SkillLocator skillLocator = body.skillLocator;
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
       SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
 
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
+      primaryDef.baseRechargeInterval = ModConfig.primCD.Value;
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeCrush));
       secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
-      secondaryDef.baseRechargeInterval = 40f;
+      secondaryDef.baseRechargeInterval = ModConfig.secCD.Value;
       utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(SpinBeamEnter));
-      utilityDef.baseRechargeInterval = 30f;
+      utilityDef.baseRechargeInterval = ModConfig.specCD.Value;
       specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
-      specialDef.baseRechargeInterval = 20f;
+      specialDef.baseRechargeInterval = ModConfig.utilCD.Value;
       specialDef.interruptPriority = EntityStates.InterruptPriority.Skill;
       Logger.LogInfo("Finished Adjusting P2 Skills");
     }
-    private void AdjustPhase3Stats()
+    private void AdjustPhase3Skills(CharacterBody body)
     {
-      Logger.LogInfo("Adjusting P3 Stats");
-      CharacterBody voidRaidCrabBody = voidRaidCrabPhase3.GetComponent<CharacterBody>();
-      voidRaidCrabBody.subtitleNameToken = "Augur of the Abyss";
-      voidRaidCrabBody.baseMaxHealth = 1250;
-      voidRaidCrabBody.levelMaxHealth = 350;
-      voidRaidCrabBody.baseAttackSpeed = 1.25f;
-      voidRaidCrabBody.baseMoveSpeed = 90;
-      voidRaidCrabBody.baseAcceleration = 45;
-      voidRaidCrabBody.baseArmor = 30;
-      Logger.LogInfo("Finished Adjusting P3 Stats");
-
       Logger.LogInfo("Adjusting P3 Skills");
-      SkillLocator skillLocator = voidRaidCrabPhase3.GetComponent<SkillLocator>();
+      SkillLocator skillLocator = body.skillLocator;
       SkillDef primaryDef = skillLocator.primary.skillFamily.variants[0].skillDef;
       SkillDef secondaryDef = skillLocator.secondary.skillFamily.variants[0].skillDef;
       SkillDef utilityDef = skillLocator.utility.skillFamily.variants[0].skillDef;
       SkillDef specialDef = skillLocator.special.skillFamily.variants[0].skillDef;
 
       primaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Disillusion));
+      primaryDef.baseRechargeInterval = ModConfig.primCD.Value;
       secondaryDef.activationState = new EntityStates.SerializableEntityStateType(typeof(ChargeCrush));
       secondaryDef.interruptPriority = EntityStates.InterruptPriority.Death;
-      secondaryDef.baseRechargeInterval = 40f;
+      secondaryDef.baseRechargeInterval = ModConfig.secCD.Value;
       utilityDef.activationState = new EntityStates.SerializableEntityStateType(typeof(SpinBeamEnter));
-      utilityDef.baseRechargeInterval = 30f;
+      utilityDef.baseRechargeInterval = ModConfig.specCD.Value;
       specialDef.activationState = new EntityStates.SerializableEntityStateType(typeof(Transpose));
-      specialDef.baseRechargeInterval = 20f;
+      specialDef.baseRechargeInterval = ModConfig.utilCD.Value;
       specialDef.interruptPriority = EntityStates.InterruptPriority.Skill;
       Logger.LogInfo("Finished Adjusting P3 Skills");
     }
@@ -257,10 +267,12 @@ namespace FathomlessVoidling
     private void CharacterMaster_OnBodyStart(On.RoR2.CharacterMaster.orig_OnBodyStart orig, RoR2.CharacterMaster self, CharacterBody body)
     {
       orig(self, body);
+      if (body.name == "MiniVoidRaidCrabBodyPhase1(Clone)")
+        AdjustPhase1Skills(body);
       if (body.name == "MiniVoidRaidCrabBodyPhase2(Clone)")
-        AdjustPhase2Stats();
+        AdjustPhase2Skills(body);
       if (body.name == "MiniVoidRaidCrabBodyPhase3(Clone)")
-        AdjustPhase3Stats();
+        AdjustPhase3Skills(body);
     }
 
     private void MasterChanges(CharacterMaster master)

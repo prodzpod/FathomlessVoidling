@@ -1,15 +1,15 @@
 # Fathomless Voidling
 
-A Work In Progress of a Voidling rework mod. Stats are currently Mithrix level so Voidling is an actual alt final boss and not a DPS check, will have stat configs on full release. There's a Deep Void portal on soup island (moon cauldrons) that will take you directly to Voidling if you don't want to fight Mithrix or spend coins.
+A Voidling rework mod that makes the fight more fun. Stats are reduced by default but can be increased in either the in-game config or the R2Modman config (for those who want to tweak things even more). Makes the Void Locus an alternate moon by adding a stage 5 portal, removing void fog from void pillars, and adds item cauldrons (Can toggle the alt moon/void fog).
 
-Phase info (Final Version not current):
+Phase info:
 
 Phase 1:
 
 - Primary: Disillusion
   - Fires waves of void missiles and summons 3 large predictive death bombs
-- Secondary: Singularity
-  - Creates a black hole in the center of the donut
+- Secondary: Vacuum (Vanilla)
+  - Creates a black hole underneath itself
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
 - Special: Rend
@@ -19,12 +19,12 @@ Phase 2:
 
 - Primary: Disill??usion
   - Fires waves of void missiles and summons 3 faster predictive death bombs
-- Secondary: ???
-  - ???
+- Secondary: Singularity
+  - Creates a larger black hole at the center of the donut
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
-- Special: ???
-  - ???
+- Special: SpinBeam (Vanilla)
+  - Fires a giant laser and spins in a circle
 
 Phase 3:
 
@@ -34,8 +34,8 @@ Phase 3:
   - Pulls meteors from the surrounding area and launches them at the player
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
-- Special: ???
-  - ???
+- Special: Reap
+  - Multiple giant lasers burst from the ground
 
 ## Plans
 
@@ -46,15 +46,21 @@ Phase 3:
 
 ## Changelog
 
+**?.?.?**
+
+- Fixed Phase 2 and 3 having extra HP
+- Set up in-game configs (Toggles, Stats, CDs) (RiskOfOptions support)
+
+
 **0.8.0**
 
 - Rewrote a lot of the code (fixed console spam, makes sure things work properly, better organized, etc...)
 - R2API updates
 - Slightly buffs HP (1100 -> 1250 base | 325 -> 350 level)
 - Slows down meteor speed (150 -> 100)
-- Completes Singularity ability
 - Updates Disillusion to change death bombs each phase and actually be predictive
 - Moves Crush to Phase 2/3
+- Adds SpinBeam to Phase 2/3
 - Adds more missile waves to Disillusion
 - README Updates
 

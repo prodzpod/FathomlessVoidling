@@ -28,4 +28,10 @@
     <PackageReference Include="R2API.Prefab" Version="1.0.1" />
   </ItemGroup>
 
+    <ItemGroup>
+    <Reference Include="RiskOfOptions">
+      <HintPath>libs\RiskOfOptions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

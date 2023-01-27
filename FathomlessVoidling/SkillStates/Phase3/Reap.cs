@@ -1,21 +1,16 @@
 using RoR2;
-using RoR2.Projectile;
 using RoR2.Navigation;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
 using EntityStates;
-using EntityStates.BrotherHaunt;
-using EntityStates.VagrantMonster.Weapon;
-using EntityStates.BrotherMonster;
 using EntityStates.VoidRaidCrab;
 using EntityStates.VoidRaidCrab.Weapon;
-using EntityStates.BrotherMonster.Weapon;
 using System.Collections.Generic;
 
 namespace FathomlessVoidling
 {
-  public class Desolate : BaseState
+  public class Reap : BaseState
   {
     private float stopwatch;
     private float missileStopwatch;
@@ -52,7 +47,7 @@ namespace FathomlessVoidling
       base.OnEnter();
       this.missileStopwatch -= missileSpawnDelay;
       this.duration = this.baseDuration / this.attackSpeedStat;
-      this.muzzleTransform = this.FindModelChild(Desolate.muzzleName);
+      this.muzzleTransform = this.FindModelChild(Reap.muzzleName);
     }
     private void FireProjectile()
     {
