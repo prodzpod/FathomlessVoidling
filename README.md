@@ -20,7 +20,7 @@ Phase 2:
 - Primary: Disill??usion
   - Fires waves of void missiles and summons 3 faster predictive death bombs
 - Secondary: Singularity
-  - Creates a larger black hole at the center of the donut
+  - Creates a black hole at the center of the donut
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
 - Special: SpinBeam (Vanilla)
@@ -35,22 +35,24 @@ Phase 3:
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
 - Special: Reap
-  - Multiple giant lasers burst from the ground
+  - ???
 
 ## Plans
 
-- Adding stat configs
-- Finishing 2-3 more abilities
-- Polish
+- Finishing P3 Laser Special
+- AI Changes
 - Making Locus a Moon alternative (portal on stage 5, adding cauldrons, removing pillar void fog)
+- Maybe making singularity larger/stronger
 
 ## Changelog
 
-**?.?.?**
+**0.8.5**
 
 - Fixed Phase 2 and 3 having extra HP
 - Set up in-game configs (Toggles, Stats, CDs) (RiskOfOptions support)
-
+- Removed some wonky AI changes
+- Added singularity (center vacuum)
+- README edit
 
 **0.8.0**
 
