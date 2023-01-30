@@ -14,7 +14,7 @@ using UnityEngine.AddressableAssets;
 
 namespace FathomlessVoidling
 {
-  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.8.5")]
+  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.8.6")]
   [BepInDependency("com.bepis.r2api.content_management", BepInDependency.DependencyFlags.HardDependency)]
   [BepInDependency("com.bepis.r2api.prefab", BepInDependency.DependencyFlags.HardDependency)]
   [BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.HardDependency)]
@@ -219,15 +219,29 @@ namespace FathomlessVoidling
 
     private void MasterChanges(CharacterMaster master)
     {
-      if (master.name == "MiniVoidRaidCrabMasterPhase1(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase2(Clone)")
+      if (master.name == "MiniVoidRaidCrabMasterPhase1(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase2(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase3(Clone)")
       {
-        Logger.LogInfo("Editing P1 Special AISkillDriver");
+        Logger.LogInfo("Editing AISkillDrivers");
         AISkillDriver aiSkillDriverPrimary = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Primary)).First<AISkillDriver>();
         AISkillDriver aiSkillDriverSecondary = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Secondary)).First<AISkillDriver>();
+        AISkillDriver aiSkillDriverUtility = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Utility)).First<AISkillDriver>();
         AISkillDriver aiSkillDriverSpecial = ((IEnumerable<AISkillDriver>)master.GetComponents<AISkillDriver>()).Where<AISkillDriver>((Func<AISkillDriver, bool>)(x => x.skillSlot == SkillSlot.Special)).First<AISkillDriver>();
         aiSkillDriverSecondary.movementType = AISkillDriver.MovementType.Stop;
+        aiSkillDriverSecondary.maxUserHealthFraction = 0.9f;
+        aiSkillDriverSecondary.minUserHealthFraction = float.NegativeInfinity;
         aiSkillDriverSecondary.requiredSkill = null;
-        Logger.LogInfo("Finished Editing P1 Special AISkillDriver");
+        aiSkillDriverSecondary.maxDistance = 200;
+        aiSkillDriverUtility.maxUserHealthFraction = float.PositiveInfinity;
+        aiSkillDriverUtility.minUserHealthFraction = float.NegativeInfinity;
+        aiSkillDriverUtility.requiredSkill = null;
+        aiSkillDriverUtility.maxDistance = 400;
+        aiSkillDriverUtility.minDistance = 0;
+        aiSkillDriverSpecial.maxUserHealthFraction = 0.8f;
+        aiSkillDriverSpecial.minUserHealthFraction = float.NegativeInfinity;
+        aiSkillDriverSpecial.requiredSkill = null;
+        aiSkillDriverSpecial.maxDistance = 400;
+        aiSkillDriverSpecial.minDistance = 0;
+        Logger.LogInfo("Finished Editing AISkillDrivers");
       }
       if (master.name == "MiniVoidRaidCrabMasterPhase1(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase2(Clone)" || master.name == "MiniVoidRaidCrabMasterPhase3(Clone)")
         master.inventory.GiveItem(RoR2Content.Items.TeleportWhenOob);

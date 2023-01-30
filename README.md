@@ -40,11 +40,14 @@ Phase 3:
 ## Plans
 
 - Finishing P3 Laser Special
-- AI Changes
 - Making Locus a Moon alternative (portal on stage 5, adding cauldrons, removing pillar void fog)
-- Maybe making singularity larger/stronger
 
 ## Changelog
+
+**0.8.6**
+
+- Fixed Voidling not using its special ability in all phases
+- AI Changes
 
 **0.8.5**
 
