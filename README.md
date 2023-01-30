@@ -1,6 +1,6 @@
 # Fathomless Voidling
 
-A Voidling rework mod that makes the fight more fun. Stats are reduced by default but can be increased in either the in-game config or the R2Modman config (for those who want to tweak things even more). Makes the Void Locus an alternate moon by adding a stage 5 portal, removing void fog from void pillars, and adds item cauldrons (Can toggle the alt moon/void fog).
+A Voidling rework mod that makes the fight more fun. Stats are reduced by default but can be increased in either the in-game config or the R2Modman config (for those who want to tweak things even more). (Coming next update, config currently does nothing for "General") Makes the Void Locus an alternate moon by adding a stage 5 portal, removing void fog from void pillars, and adds item cauldrons (Can toggle the alt moon/void fog).
 
 Phase info:
 
