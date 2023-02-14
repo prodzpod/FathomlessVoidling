@@ -124,7 +124,6 @@ namespace FathomlessVoidling
 
     private class Predictor
     {
-      public Ray aimRay;
       private Transform bodyTransform;
       private Transform targetTransform;
       private Vector3 targetPosition0;

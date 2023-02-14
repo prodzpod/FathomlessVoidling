@@ -1,6 +1,6 @@
 ﻿{
 	"name": "FathomlessVoidling",
-	"version_number": "0.8.6",
+	"version_number": "0.9.0",
 	"website_url": "https://github.com/nuxlar/FathomlessVoidling",
 	"description": "Improved Voidling fight with some extras. Configurable",
 	"dependencies": [

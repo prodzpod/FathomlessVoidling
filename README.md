@@ -1,6 +1,6 @@
 # Fathomless Voidling
 
-A Voidling rework mod that makes the fight more fun. Stats are reduced by default but can be increased in either the in-game config or the R2Modman config (for those who want to tweak things even more). (Coming next update, config currently does nothing for "General") Makes the Void Locus an alternate moon by adding a stage 5 portal, removing void fog from void pillars, and adds item cauldrons (Can toggle the alt moon/void fog).
+A Voidling rework mod that makes the fight more fun. Stats are reduced by default but can be increased in either the in-game config or the R2Modman config (for those who want to tweak things even more). Makes the Void Locus an alternate moon by adding a stage 5 portal, removing void fog from void pillars, and adds item cauldrons (Can toggle the alt moon/void fog).
 
 Phase info:
 
@@ -34,15 +34,20 @@ Phase 3:
   - Pulls meteors from the surrounding area and launches them at the player
 - Utility: Transpose
   - Slips deeper into the void, reappears near the target
-- Special: Reap
-  - ???
+- Special: SpinBeam (Vanilla)
+  - Fires a giant laser and spins in a circle
 
 ## Plans
 
-- Finishing P3 Laser Special
-- Making Locus a Moon alternative (portal on stage 5, adding cauldrons, removing pillar void fog)
+- Finishing P3 Laser Special (probably not going to happen)
 
 ## Changelog
+
+**0.9.0**
+
+- Made Locus a Moon alternative
+  - Added 5 cauldrons (1 red to white, 2 green to red, 2 white to green)
+  - Void Locus portal spawns stage 5
 
 **0.8.6**
 

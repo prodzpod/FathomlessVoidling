@@ -10,11 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
 
 namespace FathomlessVoidling
 {
-  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.8.6")]
+  [BepInPlugin("com.Nuxlar.FathomlessVoidling", "FathomlessVoidling", "0.9.0")]
   [BepInDependency("com.bepis.r2api.content_management", BepInDependency.DependencyFlags.HardDependency)]
   [BepInDependency("com.bepis.r2api.prefab", BepInDependency.DependencyFlags.HardDependency)]
   [BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.HardDependency)]
@@ -36,7 +37,12 @@ namespace FathomlessVoidling
     public static GameObject deathBombPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidMegaCrab/VoidMegaCrabDeathBombExplosion.prefab").WaitForCompletion();
     public static GameObject spawnEffect = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpawnEffect.prefab").WaitForCompletion();
     public static GameObject spinBeamVFX = Addressables.LoadAssetAsync<GameObject>("RoR2/DLC1/VoidRaidCrab/VoidRaidCrabSpinBeamVFX.prefab").WaitForCompletion();
-    public static SpawnCard deepVoidCard = Addressables.LoadAssetAsync<SpawnCard>("RoR2/DLC1/DeepVoidPortal/iscDeepVoidPortal.asset").WaitForCompletion();
+    // Alt Moon
+    public static GameObject r2wCauldron = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/LunarCauldrons/LunarCauldron, RedToWhite Variant.prefab").WaitForCompletion();
+    public static GameObject g2rCauldron = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/LunarCauldrons/LunarCauldron, GreenToRed Variant.prefab").WaitForCompletion();
+    public static GameObject w2gCauldron = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/LunarCauldrons/LunarCauldron, WhiteToGreen.prefab").WaitForCompletion();
+    public static SpawnCard locusPortalCard = Addressables.LoadAssetAsync<SpawnCard>("RoR2/DLC1/PortalVoid/iscVoidPortal.asset").WaitForCompletion();
+
     public static SceneDef voidRaid = Addressables.LoadAssetAsync<SceneDef>("RoR2/DLC1/voidraid/voidraid.asset").WaitForCompletion();
     private static AnimationCurve singularityDeathCurve = null;
     private static AnimationCurve singularityPullCurve = null;
@@ -44,6 +50,9 @@ namespace FathomlessVoidling
     {
       ModConfig.InitConfig(Config);
       On.RoR2.Run.Start += RunStart;
+      On.RoR2.Stage.Start += StageStart;
+      On.RoR2.VoidStageMissionController.RequestFog += RequestFog;
+      On.RoR2.TeleporterInteraction.AttemptToSpawnAllEligiblePortals += TeleporterInteraction_AttemptToSpawnAllEligiblePortals;
       CharacterMaster.onStartGlobal += MasterChanges;
       On.RoR2.CharacterMaster.OnBodyStart += CharacterMaster_OnBodyStart;
       On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.OnEnter += BaseVacuumAttackStateOnEnter;
@@ -65,6 +74,64 @@ namespace FathomlessVoidling
         3.3
         Suck.playbackRate
     **/
+
+    private void StageStart(On.RoR2.Stage.orig_Start orig, RoR2.Stage self)
+    {
+      orig(self);
+      if (self.sceneDef.cachedName == "voidstage" && ModConfig.enableAltMoon.Value)
+        SpawnLocusCauldrons();
+    }
+
+    private void SpawnLocusCauldrons()
+    {
+      GameObject cauldron1 = Instantiate(r2wCauldron, new Vector3(-142.67f, 29.94f, 242.74f), Quaternion.identity);
+      cauldron1.transform.eulerAngles = new Vector3(0.0f, 66f, 0.0f);
+      NetworkServer.Spawn(cauldron1);
+      GameObject cauldron2 = Instantiate(g2rCauldron, new Vector3(-136.76f, 29.94f, 246.51f), Quaternion.identity);
+      cauldron2.transform.eulerAngles = new Vector3(0.0f, 66f, 0.0f);
+      NetworkServer.Spawn(cauldron2);
+      GameObject cauldron3 = Instantiate(g2rCauldron, new Vector3(-149.74f, 29.93f, 239.7f), Quaternion.identity);
+      cauldron3.transform.eulerAngles = new Vector3(0.0f, 66f, 0.0f);
+      NetworkServer.Spawn(cauldron3);
+      GameObject cauldron4 = Instantiate(w2gCauldron, new Vector3(-157.41f, 29.97f, 237.12f), Quaternion.identity);
+      cauldron4.transform.eulerAngles = new Vector3(0.0f, 66f, 0.0f);
+      NetworkServer.Spawn(cauldron4);
+      GameObject cauldron5 = Instantiate(w2gCauldron, new Vector3(-126.63f, 29.93f, 249.1f), Quaternion.identity);
+      cauldron5.transform.eulerAngles = new Vector3(0.0f, 66f, 0.0f);
+      NetworkServer.Spawn(cauldron5);
+    }
+
+    private VoidStageMissionController.FogRequest RequestFog(On.RoR2.VoidStageMissionController.orig_RequestFog orig, RoR2.VoidStageMissionController self, IZone zone)
+    {
+      if (ModConfig.enableVoidFog.Value)
+        return orig(self, zone);
+      else
+        return null;
+    }
+
+    private void TeleporterInteraction_AttemptToSpawnAllEligiblePortals(On.RoR2.TeleporterInteraction.orig_AttemptToSpawnAllEligiblePortals orig, TeleporterInteraction self)
+    {
+      if (SceneCatalog.mostRecentSceneDef == SceneCatalog.GetSceneDefFromSceneName("skymeadow") && ModConfig.enableAltMoon.Value)
+      {
+        self.portalSpawners = new PortalSpawner[0];
+        SpawnLocusPortal(self.transform, self.rng);
+      }
+    }
+
+    private void SpawnLocusPortal(Transform transform, Xoroshiro128Plus rng)
+    {
+      DirectorCore instance = DirectorCore.instance;
+      DirectorPlacementRule placementRule = new();
+      placementRule.minDistance = 10f;
+      placementRule.maxDistance = 40f;
+      placementRule.placementMode = DirectorPlacementRule.PlacementMode.Approximate;
+      placementRule.position = transform.position;
+      placementRule.spawnOnTarget = transform;
+      DirectorSpawnRequest directorSpawnRequest = new(locusPortalCard, placementRule, rng);
+      GameObject gameObject = instance.TrySpawnObject(directorSpawnRequest);
+      if ((bool)gameObject)
+        NetworkServer.Spawn(gameObject);
+    }
 
     private void BaseVacuumAttackStateOnEnter(On.EntityStates.VoidRaidCrab.BaseVacuumAttackState.orig_OnEnter orig, EntityStates.VoidRaidCrab.BaseVacuumAttackState self)
     {
