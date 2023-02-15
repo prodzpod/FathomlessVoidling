@@ -113,9 +113,16 @@ namespace FathomlessVoidling
     {
       if (SceneCatalog.mostRecentSceneDef == SceneCatalog.GetSceneDefFromSceneName("skymeadow") && ModConfig.enableAltMoon.Value)
       {
-        self.portalSpawners = new PortalSpawner[0];
+        var list = self.portalSpawners.toList();
+        var locus = list.Find(x => x.portalSpawnCard == locusPortalCard);
+        if (locus != null) 
+        {
+          list.Remove(locus);
+          self.portalSpawners = list.toArray();
+        }
         SpawnLocusPortal(self.transform, self.rng);
       }
+      orig(self);
     }
 
     private void SpawnLocusPortal(Transform transform, Xoroshiro128Plus rng)
